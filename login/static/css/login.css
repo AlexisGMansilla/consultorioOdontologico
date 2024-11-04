@@ -1,0 +1,186 @@
+/* Colores personalizados */
+:root {
+    --azul-logo: #003366;
+    --verde-claro: #CFE795;
+    --verde-suave: #A7D3A6;
+    --fondo-claro: #F5F5F5;
+    --fondo-gris: #f0f0f0;
+    --verde-boton: #4CAF50;
+    --gris-texto: #333;
+}
+
+/* Fondo principal y cuerpo */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: var(--fondo-gris);
+    margin: 0;
+}
+.centered-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--fondo-gris);
+}
+
+/* Contenedor principal */
+.container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px var(--sombra-clara);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+/* Título principal */
+h2 {
+    color: var(--gris-texto);
+}
+
+/* Botón de registro */
+.register-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: var(--verde-boton);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.register-btn:hover {
+    background-color: var(--verde-suave);
+}
+
+/* Mensajes de éxito y error */
+.messages {
+    margin: 20px 0;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+}
+
+.messages .success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.messages .error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Modal para registro */
+.modal {
+    display: none; /* Escondido por defecto */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Fondo semi-transparente */
+}
+
+/* Contenido del modal */
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid var(--verde-claro);
+    width: 100%;
+    max-width: 400px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+/* Botón de cierre del modal */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: var(--gris-texto);
+}
+
+/* Input para formularios */
+input[type="text"],
+input[type="password"] {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--verde-claro);
+    background-color: var(--fondo-claro);
+    width: 100%;
+    max-width: 300px;
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+/* Botones */
+button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+/* Botón de Iniciar Sesión */
+button[name="login"] {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, var(--azul-logo), var(--verde-suave));
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 20px;
+}
+
+button[name="login"]:hover {
+    background: linear-gradient(135deg, var(--verde-claro), var(--verde-suave));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+button[name="login"]:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+    background-color: var(--azul-logo);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--verde-suave);
+}
+
+.btn-secondary {
+    background-color: var(--verde-claro);
+    color: var(--azul-logo);
+}
+
+.btn-secondary:hover {
+    background-color: var(--verde-suave);
+}
