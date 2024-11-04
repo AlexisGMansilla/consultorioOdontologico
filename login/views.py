@@ -43,7 +43,7 @@ def login_register_view(request):
         if user is not None:
             login(request, user)
             messages.success(request, 'Inicio de sesión exitoso')
-            return redirect('home')
+            return redirect('pacientes')  # Redirige a la página de pacientes
         else:
             messages.error(request, 'Usuario o contraseña incorrectos')
 

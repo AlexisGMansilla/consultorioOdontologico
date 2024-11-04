@@ -1,0 +1,84 @@
+/* Colores personalizados */
+:root {
+    --fondo-claro: #F5F5F5;
+    --amarillo-suave: #F7EF81;
+    --verde-claro: #CFE795;
+    --verde-suave: #A7D3A6;
+    --verde-agua: #ADD2C2;
+    --azul-logo: #003366;
+}
+
+/* Fondo principal */
+body {
+    background-color: var(--fondo-claro);
+    font-family: Arial, sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--verde-suave);
+    padding: 1rem;
+}
+
+.navbar-brand, .nav-link {
+    color: var(--azul-logo) !important;
+    font-weight: bold;
+}
+
+.nav-link:hover {
+    background-color: var(--verde-claro);
+    border-radius: 4px;
+    color: #333 !important;
+}
+
+/* Título principal */
+h2 {
+    color: var(--azul-logo);
+    font-weight: bold;
+}
+
+/* Tabla de pacientes */
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--verde-agua); /* Color para filas alternas */
+}
+
+.table-light th {
+    background-color: var(--verde-claro); /* Verde claro */
+    color: var(--azul-logo);
+}
+
+.table .btn-info {
+    background-color: var(--amarillo-suave); /* Amarillo suave */
+    border-color: var(--amarillo-suave);
+    color: #333;
+}
+
+.table .btn-info:hover {
+    background-color: var(--verde-claro); /* Verde claro al pasar el mouse */
+    border-color: var(--verde-claro);
+}
+
+.table .btn-warning {
+    background-color: #F5CBA7; /* Naranja suave para Editar */
+    border-color: #F5CBA7;
+    color: #333;
+}
+
+.table .btn-warning:hover {
+    background-color: #F7B896; /* Naranja más oscuro */
+    border-color: #F7B896;
+}
+
+/* Footer (si deseas incluir uno) */
+footer {
+    background-color: var(--verde-suave);
+    color: var(--azul-logo);
+    text-align: center;
+    padding: 1rem;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}

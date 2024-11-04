@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pacientes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <!-- Navbar Principal -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary-custom">
+        <div class="container">
+            <a class="navbar-brand text-white" href="#">Dental Salta</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'pacientes' %}">Pacientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#">Turnos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#">Inventario</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#">Agregar Obra Social</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'logout' %}">Cerrar Sesión</a>
+                    </li>
+                    
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <div class="container my-4">
+        <h2 class="mb-4 text-primary-custom">Pacientes</h2>
+
+        <!-- Botón para agregar un nuevo paciente -->
+        <div class="mb-3">
+            <a href="{% url 'crear_paciente' %}" class="btn btn-success">Agregar Nuevo Paciente</a>
+        </div>
+
+        <!-- Tabla de pacientes -->
+        <table class="table table-striped">
+            <thead class="table-light">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>DNI</th>
+                    <th>Edad</th>
+                    <th>Teléfono</th>
+                    <th>Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for paciente in pacientes %}
+                <tr>
+                    <td>{{ paciente.nombre }}</td>
+                    <td>{{ paciente.apellido }}</td>
+                    <td>{{ paciente.dni }}</td>
+                    <td>{{ paciente.edad }}</td>
+                    <td>{{ paciente.telefono }}</td>
+                    <td>
+                        <a href="{% url 'historia_clinica' paciente_id=paciente.id %}" class="btn btn-info btn-sm">+ INFORMACIÓN</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">No hay pacientes registrados.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

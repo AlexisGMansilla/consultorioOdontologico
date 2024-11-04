@@ -21,5 +21,6 @@ from django.views.generic import RedirectView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', include('login.urls')),  # Asegúrate de que está bien escrito
+    path('pacientes/', include('pacientes.urls')),
     path('', RedirectView.as_view(url='/login/', permanent=True)),  # Redirección a la página de login
 ]
