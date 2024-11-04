@@ -23,4 +23,5 @@ urlpatterns = [
     path('login/', include('login.urls')),  # Asegúrate de que está bien escrito
     path('pacientes/', include('pacientes.urls')),
     path('', RedirectView.as_view(url='/login/', permanent=True)),  # Redirección a la página de login
+    path('inventario/', include('inventario.urls')),  # Incluye las rutas de la aplicación 'inventario'
 ]

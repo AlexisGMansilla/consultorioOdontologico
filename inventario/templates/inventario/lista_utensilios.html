@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/inventario.css' %}">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <span class="navbar-brand">Inventario</span>
+    </nav>
+
+    <div class="container">
+        <h2>Inventario</h2>
+
+        <!-- Botón para agregar utensilio -->
+        <button class="btn btn-success" onclick="document.getElementById('modal').style.display='block'">Agregar Utensilio</button>
+
+        <!-- Tabla de inventario sin casillas de verificación -->
+        <table class="inventory-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Cantidad</th>
+                    <th>Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for utensilio in utensilios %}
+                <tr>
+                    <td>{{ utensilio.nombre }}</td>
+                    <td class="quantity {% if utensilio.cantidad < 10 %}low-stock{% else %}sufficient-stock{% endif %}">{{ utensilio.cantidad }}</td>
+                    <td>
+                        <button class="btn btn-warning">Editar</button>
+                        <button class="btn btn-danger">Eliminar</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal para agregar utensilio -->
+    <div id="modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h2>Agregar Utensilio</h2>
+            <form action="{% url 'agregar_utensilio' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="nombre">Nombre del Utensilio:</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="cantidad">Cantidad:</label>
+                    <input type="number" id="cantidad" name="cantidad" min="1" required>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal').style.display='none'">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
