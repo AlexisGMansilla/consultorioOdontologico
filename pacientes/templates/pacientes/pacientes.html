@@ -10,31 +10,33 @@
 </head>
 <body>
     <!-- Navbar Principal -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-primary-custom">
+    <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand text-white" href="#">Dental Salta</a>
+            <a class="navbar-brand" href="#">Dental Salta</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'pacientes' %}">Pacientes</a>
+                        <a class="nav-link" href="{% url 'pacientes' %}">Pacientes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#">Turnos</a>
+                        <a class="nav-link" href="#">Turnos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#">Inventario</a>
+                        <a class="nav-link" href="#">Inventario</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#">Agregar Obra Social</a>
+                        <a class="nav-link" href="#">Agregar Obra Social</a>
                     </li>
                     {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'logout' %}">Cerrar Sesión</a>
+                    <li class="nav-item nav-form">
+                        <form action="{% url 'logout' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link btn btn-link">Cerrar Sesión</button>
+                        </form>
                     </li>
-                    
                     {% endif %}
                 </ul>
             </div>

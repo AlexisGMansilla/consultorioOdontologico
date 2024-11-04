@@ -23,16 +23,42 @@ body {
     padding: 1rem;
 }
 
-.navbar-brand, .nav-link {
+.navbar-brand {
     color: var(--azul-logo) !important;
     font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.navbar-collapse {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-nav {
+    display: flex;
+    gap: 1rem;
+}
+
+.nav-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-link {
+    color: var(--azul-logo) !important;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .nav-link:hover {
     background-color: var(--verde-claro);
     border-radius: 4px;
     color: #333 !important;
+    padding: 0.5rem 1rem;
 }
+
 
 /* Título principal */
 h2 {
