@@ -13,7 +13,7 @@ class Paciente(models.Model):
     apellido = models.CharField(max_length=100)
     dni = models.CharField(max_length=20, unique=True)
     fecha_nacimiento = models.DateField()
-    telefono = models.CharField(max_length=15, blank=True)  # Campo de teléfono añadido
+    telefono = models.CharField(max_length=15, blank=True) 
     direccion = models.CharField(max_length=255)
     genero = models.CharField(max_length=1, choices=GENDER_CHOICES)
     email = models.EmailField(blank=True)
