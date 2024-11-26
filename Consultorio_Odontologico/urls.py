@@ -9,4 +9,5 @@ urlpatterns = [
     path('', RedirectView.as_view(url='/login/', permanent=True)), 
     path('inventario/', include('inventario.urls')), 
     path('turnos/', include('turnos.urls')), 
+    path('obra_sociales/', include('obra_sociales.urls')), 
 ]

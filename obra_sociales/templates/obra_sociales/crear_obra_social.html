@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Obra Social</title>
+</head>
+<body>
+    <h1>Agregar Obra Social</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="{% url 'listar_obras_sociales' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</body>
+</html>

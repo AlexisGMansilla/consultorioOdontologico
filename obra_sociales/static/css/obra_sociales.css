@@ -1,0 +1,58 @@
+/* Contenedor centrado para la tabla */
+.tabla-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px auto; /* Margen superior e inferior */
+    width: 80%; /* Ajustar ancho del contenedor */
+}
+
+/* Tabla más compacta y centrada */
+table#tabla-obras {
+    width: 200%; /* Ancho completo del contenedor */
+    max-width: 1000px; /* Tamaño máximo de la tabla */
+    margin: auto;
+    border-collapse: collapse; /* Elimina espacios entre bordes */
+    text-align: center; /* Centra texto en celdas */
+}
+
+/* Encabezado de la tabla */
+table#tabla-obras thead th {
+    background-color: #f1f1f1; /* Fondo gris claro */
+    border-bottom: 2px solid #ccc; /* Borde inferior */
+    padding: 10px; /* Espaciado */
+}
+
+/* Filas de la tabla */
+table#tabla-obras tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Fondo alternado */
+}
+
+table#tabla-obras tbody tr:hover {
+    background-color: #e9ecef; /* Color al pasar el mouse */
+}
+
+/* Botones de opciones */
+.btn {
+    padding: 5px 12px;
+    font-size: 14px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 0 3px; /* Separación entre botones */
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    color: white;
+    border: none;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+}
+
+.btn:hover {
+    opacity: 0.9; /* Ligeramente opaco al pasar el mouse */
+}
