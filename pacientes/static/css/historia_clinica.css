@@ -1,0 +1,82 @@
+/* Colores personalizados */
+:root {
+    --fondo-claro: #F5F5F5;
+    --amarillo-suave: #F7EF81;
+    --verde-claro: #CFE795;
+    --verde-suave: #A7D3A6;
+    --verde-agua: #ADD2C2;
+    --azul-logo: #003366;
+    --verde-resaltado: #A3D9A5;
+}
+
+/* Fondo principal */
+body {
+    background-color: var(--fondo-claro);
+    font-family: Arial, sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Títulos */
+.text-primary-custom {
+    color: var(--azul-logo);
+    font-weight: bold;
+}
+
+/* Estilos para la página de Historia Clínica */
+.hc-container {
+    background-color: var(--verde-suave);
+    border: 1px solid var(--verde-claro);
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.hc-header {
+    color: var(--azul-logo);
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1.5rem;
+
+    padding: 0.5rem;
+    border-radius: 8px;
+}
+
+.hc-form-label {
+    color: var(--azul-logo);
+    font-weight: bold;
+}
+
+/* Campos del formulario */
+.form-control, .form-select {
+    border: 1px solid var(--verde-claro);
+    color: #333;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--verde-resaltado);
+    box-shadow: 0 0 0 0.2rem rgba(163, 217, 165, 0.25);
+}
+
+/* Botones */
+.btn-primary {
+    background-color: var(--azul-logo);
+    border-color: var(--azul-logo);
+}
+
+.btn-primary:hover {
+    background-color: var(--verde-claro);
+    border-color: var(--verde-claro);
+}
+
+.btn-secondary {
+    background-color: var(--verde-claro);
+    border-color: var(--verde-claro);
+    color: #333;
+}
+
+.btn-secondary:hover {
+    background-color: var(--verde-agua);
+    border-color: var(--verde-agua);
+}

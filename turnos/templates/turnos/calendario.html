@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calendario: {{ nombre_mes }} {{ year }}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'turnos/css/calendario.css' %}">
+    <!-- Navbar Principal -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">Dental Salta</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'pacientes' %}">Pacientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Turnos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Inventario</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Agregar Obra Social</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item nav-form">
+                        <form action="{% url 'logout' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link btn btn-link">Cerrar Sesión</button>
+                        </form>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <script>
+        function abrirModal(dia, turnos) {
+            const modal = document.getElementById('turnosModal');
+            const contenido = document.getElementById('contenidoModal');
+
+            // Limpiar contenido anterior
+            contenido.innerHTML = '';
+
+            // Mostrar lista de turnos si existen
+            if (turnos.length === 0) {
+                contenido.innerHTML = '<p>No hay turnos para este día.</p>';
+            } else {
+                const lista = document.createElement('ul');
+                turnos.forEach(turno => {
+                    const item = document.createElement('li');
+                    item.innerHTML = `${turno.paciente}: ${turno.hora} - ${turno.motivo}
+                        <button onclick="editarTurno(${turno.id})">Editar</button>
+                        <button onclick="confirmarEliminar(${turno.id})">Eliminar</button>`;
+                    lista.appendChild(item);
+                });
+                contenido.appendChild(lista);
+            }
+
+            // Agregar botón para ir a la pantalla de "Agregar Turno"
+            const botonAgregar = document.createElement('button');
+            botonAgregar.textContent = 'Agregar Turno';
+            botonAgregar.onclick = function() {
+                window.location.href = `/turnos/agregar/${dia.year}/${dia.month}/${dia.day}/`;
+            };
+            contenido.appendChild(botonAgregar);
+
+            modal.style.display = 'block';
+        }
+
+        function cerrarModal() {
+            const modal = document.getElementById('turnosModal');
+            modal.style.display = 'none';
+        }
+
+        function editarTurno(turnoId) {
+            window.location.href = `/turnos/editar/${turnoId}/`;
+        }
+
+        function confirmarEliminar(turnoId) {
+            if (confirm('¿Estás seguro de que deseas eliminar este turno?')) {
+                window.location.href = `/turnos/eliminar/${turnoId}/`;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Calendario: {{ nombre_mes }} {{ year }}</h1>
+    <a href="{% url 'vista_calendario' year=year_anterior month=mes_anterior %}">Mes Anterior</a> |
+    <a href="{% url 'vista_calendario' year=year_siguiente month=mes_siguiente %}">Mes Siguiente</a>
+
+    <table>
+        <tr>
+            <th>Lun</th>
+            <th>Mar</th>
+            <th>Mié</th>
+            <th>Jue</th>
+            <th>Vie</th>
+            <th>Sáb</th>
+            <th>Dom</th>
+        </tr>
+        <tr>
+            {% for dia, turnos_dia in dias %}
+                {% if dia is None %}
+                    <td class="vacio"></td>
+                {% else %}
+                    <td class="{% if turnos_dia %}con-turnos{% endif %}"
+                        onclick="abrirModal({year: {{ year }}, month: {{ month }}, day: {{ dia }}}, [
+                            {% for turno in turnos_dia %}
+                                { 'id': {{ turno.id }},
+                                  'paciente': '{{ turno.paciente }}',
+                                  'hora': '{{ turno.hora }}',
+                                  'motivo': '{{ turno.motivo }}' },
+                            {% endfor %}
+                        ])">
+                        {{ dia }}
+                    </td>
+                {% endif %}
+                {% if forloop.counter|divisibleby:7 %}
+        </tr><tr>
+                {% endif %}
+            {% endfor %}
+        </tr>
+    </table>
+
+    <!-- Modal -->
+    <div id="turnosModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
+        <div style="background:white; margin:10% auto; padding:20px; width:50%;">
+            <h2>Turnos del día</h2>
+            <div id="contenidoModal"></div>
+            <button onclick="cerrarModal()">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Meta tag para el token CSRF -->
+    <meta name="csrf-token" content="{{ csrf_token }}">
+</body>
+</html>

@@ -66,45 +66,30 @@ h2 {
     font-weight: bold;
 }
 
-/* Tabla de pacientes */
-.table-striped tbody tr:nth-of-type(odd) {
-    background-color: var(--verde-agua); /* Color para filas alternas */
+/*DSADASD*/
+table {
+    border-collapse: collapse;
+    width: 70%;
 }
 
-.table-light th {
-    background-color: var(--verde-claro); /* Verde claro */
-    color: var(--azul-logo);
-}
-
-.table .btn-info {
-    background-color: var(--amarillo-suave); /* Amarillo suave */
-    border-color: var(--amarillo-suave);
-    color: #333;
-}
-
-.table .btn-info:hover {
-    background-color: var(--verde-claro); /* Verde claro al pasar el mouse */
-    border-color: var(--verde-claro);
-}
-
-.table .btn-warning {
-    background-color: #F5CBA7; /* Naranja suave para Editar */
-    border-color: #F5CBA7;
-    color: #333;
-}
-
-.table .btn-warning:hover {
-    background-color: #F7B896; /* Naranja más oscuro */
-    border-color: #F7B896;
-}
-
-/* Footer (si deseas incluir uno) */
-footer {
-    background-color: var(--verde-suave);
-    color: var(--azul-logo);
+th, td {
+    border: 1px solid black;
     text-align: center;
-    padding: 1rem;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
+    padding: 10px;
+}
+th {
+    background-color: #f4f4f4;
+}
+td {
+    height: 50px;
+}
+.vacio {
+    background-color: #e0e0e0;
+}
+.con-turnos {
+    background-color: #c8e6c9; /* Verde claro */
+    cursor: pointer;
+}
+.con-turnos:hover {
+    background-color: #a5d6a7; /* Verde más oscuro */
 }

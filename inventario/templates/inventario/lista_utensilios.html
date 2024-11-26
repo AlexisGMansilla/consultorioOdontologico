@@ -10,64 +10,199 @@
 <body>
     <!-- Navbar -->
     <nav class="navbar">
-        <span class="navbar-brand">Inventario</span>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'pacientes' %}">Pacientes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Turnos</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'inventario' %}">Inventario</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Agregar Obra Social</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item nav-form">
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link btn btn-link">Cerrar Sesión</button>
+                    </form>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
     </nav>
 
     <div class="container">
         <h2>Inventario</h2>
-
         <!-- Botón para agregar utensilio -->
         <button class="btn btn-success" onclick="document.getElementById('modal').style.display='block'">Agregar Utensilio</button>
 
-        <!-- Tabla de inventario sin casillas de verificación -->
-        <table class="inventory-table">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Cantidad</th>
-                    <th>Opciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for utensilio in utensilios %}
-                <tr>
-                    <td>{{ utensilio.nombre }}</td>
-                    <td class="quantity {% if utensilio.cantidad < 10 %}low-stock{% else %}sufficient-stock{% endif %}">{{ utensilio.cantidad }}</td>
-                    <td>
-                        <button class="btn btn-warning">Editar</button>
-                        <button class="btn btn-danger">Eliminar</button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+        <!-- Contenedor principal de tabla y referencias -->
+        <div class="main-content" style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <!-- Tabla de inventario -->
+            <div class="table-container" style="width: 70%;">
+                <table class="inventory-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Cantidad</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for utensilio in utensilios %}
+                        <tr>
+                            <td>{{ utensilio.nombre }}</td>
+                            <td class="quantity 
+                                {% if utensilio.cantidad < 5 %}low-stock
+                                {% elif utensilio.cantidad < 10 %}medium-stock
+                                {% else %}high-stock
+                                {% endif %}
+                            ">
+                                {{ utensilio.cantidad }}
+                            </td>
+                            <td class="button-options">
+                                <button class="btn btn-warning" onclick="openEditModal({{ utensilio.id }}, '{{ utensilio.nombre|escapejs }}', {{ utensilio.cantidad }})">Editar</button>
+                                <button class="btn btn-danger" onclick="openDeleteModal({{ utensilio.id }})">Eliminar</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-    <!-- Modal para agregar utensilio -->
-    <div id="modal" class="modal" style="display:none;">
+            <!-- Tabla de referencias de stock a la derecha -->
+            <div class="stock-reference" style="width: 25%; margin-left: 1rem;">
+                <h3>Referencias de Stock</h3>
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>Nivel de Stock</th>
+                            <th>Color</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Menos de 5</td>
+                            <td style="background-color: #F28B82; color: #fff; text-align: center;">Rojo</td>
+                        </tr>
+                        <tr>
+                            <td>Menos de 10</td>
+                            <td style="background-color: #FDD835; color: #333; text-align: center;">Amarillo</td>
+                        </tr>
+                        <tr>
+                            <td>10 o más</td>
+                            <td style="background-color: #81C995; color: #fff; text-align: center;">Verde</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+<!-- Modal para agregar utensilio -->
+<div id="modal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <h2>Agregar Utensilio</h2>
+        <form action="{% url 'agregar_utensilio' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="nombre">Nombre del Utensilio:</label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="cantidad">Cantidad:</label>
+                <input type="number" id="cantidad" name="cantidad" min="1" required>
+            </div>
+            <div class="modal-buttons">
+                <button type="submit" class="btn btn-success">Guardar</button>
+                <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal').style.display='none'">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+    <!-- Modal de confirmación de eliminación -->
+    <div id="deleteModal" class="modal" style="display: none;">
         <div class="modal-content">
-            <h2>Agregar Utensilio</h2>
-            <form action="{% url 'agregar_utensilio' %}" method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="nombre">Nombre del Utensilio:</label>
-                    <input type="text" id="nombre" name="nombre" required>
-                </div>
-                <div class="form-group">
-                    <label for="cantidad">Cantidad:</label>
-                    <input type="number" id="cantidad" name="cantidad" min="1" required>
-                </div>
-                <div class="button-group">
-                    <button type="submit" class="btn btn-success">Guardar</button>
-                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal').style.display='none'">Cancelar</button>
-                </div>
-            </form>
+            <h2>¿Estás seguro?</h2>
+            <p>¿Deseas eliminar este utensilio?</p>
+            <div class="modal-buttons">
+                <button class="btn btn-danger" onclick="confirmDelete()">Sí, eliminar</button>
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancelar</button>
+            </div>
         </div>
     </div>
 
+<!-- Modal de edición -->
+<div id="editModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h2>Editar Utensilio</h2>
+        <form id="editForm" action="{% url 'editar_utensilio' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" id="editId" name="id">
+            <div class="form-group">
+                <label for="editNombre">Nombre</label>
+                <input type="text" id="editNombre" name="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="editCantidad">Cantidad</label>
+                <input type="number" id="editCantidad" name="cantidad" min="1" required>
+            </div>
+            <div class="modal-buttons">
+                <button type="submit" class="btn btn-success">Guardar</button>
+                <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
     <script>
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
+        let deleteId = null;
+
+        function openDeleteModal(id) {
+            deleteId = id;
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+            deleteId = null;
+        }
+
+        function confirmDelete() {
+            if (deleteId) {
+                const url = `/inventario/eliminar_utensilio/${deleteId}/`;
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        location.reload(); // Recargar la página para actualizar la lista
+                    } else {
+                        alert('Error al eliminar el utensilio');
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        }
+
+        function openEditModal(id, nombre, cantidad) {
+            document.getElementById('editId').value = id;
+            document.getElementById('editNombre').value = nombre;
+            document.getElementById('editCantidad').value = cantidad;
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
         }
     </script>
 </body>

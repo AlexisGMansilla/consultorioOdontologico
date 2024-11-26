@@ -1,0 +1,25 @@
+<!-- Incluir estilos y scripts de Flatpickr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<!-- Formulario -->
+<h1>Agregar Turno</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Guardar</button>
+</form>
+<a href="{% url 'vista_calendario' year=year month=month %}">Volver al calendario</a>
+
+<!-- Configuración de Flatpickr -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr(".timepicker", {
+            enableTime: true,       // Activar selector de tiempo
+            noCalendar: true,       // Desactivar calendario
+            dateFormat: "H:i",      // Formato 24 horas
+            time_24hr: true,        // Usar formato 24 horas
+            minuteIncrement: 30     // Intervalos de 30 minutos
+        });
+    });
+</script>

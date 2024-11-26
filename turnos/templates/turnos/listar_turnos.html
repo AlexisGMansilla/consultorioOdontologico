@@ -1,0 +1,18 @@
+<h1>Lista de Turnos</h1>
+<table>
+    <tr>
+        <th>Paciente</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Motivo</th>
+    </tr>
+    {% for turno in turnos %}
+    <tr>
+        <td>{{ turno.paciente }}</td>
+        <td>{{ turno.fecha }}</td>
+        <td>{{ turno.hora }}</td>
+        <td>{{ turno.motivo }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<a href="{% url 'agregar_turno' %}">Agregar Turno</a>

@@ -1,0 +1,7 @@
+<h1>Editar Turno</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Guardar</button>
+</form>
+<a href="{% url 'vista_calendario' year=turno.fecha.year month=turno.fecha.month %}">Volver al calendario</a>

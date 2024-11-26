@@ -1,3 +1,4 @@
+# login/views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
@@ -43,7 +44,7 @@ def login_register_view(request):
         if user is not None:
             login(request, user)
             messages.success(request, 'Inicio de sesión exitoso')
-            return redirect('pacientes')  # Redirige a la página de pacientes
+            return redirect('pacientes')  # Redirige a la página de pacientes después de iniciar sesión
         else:
             messages.error(request, 'Usuario o contraseña incorrectos')
 
@@ -56,4 +57,4 @@ def login_register_view(request):
         else:
             messages.error(request, 'Hubo un problema al registrar el usuario.')
 
-    return render(request, 'login/login_register.html', {'form': form})
+    return render(request, 'login_register.html', {'form': form})
