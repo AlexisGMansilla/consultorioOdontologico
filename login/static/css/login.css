@@ -4,70 +4,71 @@
     --verde-claro: #CFE795;
     --verde-suave: #A7D3A6;
     --fondo-claro: #F5F5F5;
-    --fondo-gris: #f0f0f0;
+    --fondo-gris: #F9F9F9;
     --verde-boton: #4CAF50;
     --gris-texto: #333;
+    --sombra: rgba(0, 0, 0, 0.1);
+    --transicion: 0.3s ease-in-out;
 }
 
 /* Fondo principal y cuerpo */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
     background-color: var(--fondo-gris);
     margin: 0;
-}
-.centered-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: var(--fondo-gris);
+    padding: 0;
 }
 
 /* Contenedor principal */
 .container {
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px var(--sombra-clara);
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px var(--sombra);
     width: 100%;
-    max-width: 400px;
+    max-width: 450px;
     text-align: center;
 }
+
 /* Título principal */
 h2 {
-    color: var(--gris-texto);
+    color: var(--azul-logo);
+    font-weight: bold;
+    margin-bottom: 20px;
 }
 
 /* Botón de registro */
 .register-btn {
     margin-top: 20px;
-    padding: 10px 20px;
+    padding: 12px 24px;
     background-color: var(--verde-boton);
-    color: white;
+    color: #fff;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s;
+    transition: var(--transicion);
 }
 
 .register-btn:hover {
     background-color: var(--verde-suave);
+    transform: scale(1.05);
 }
 
 /* Mensajes de éxito y error */
 .messages {
     margin: 20px 0;
-    padding: 10px;
-    border-radius: 5px;
+    padding: 10px 20px;
+    border-radius: 8px;
     width: 100%;
-    max-width: 300px;
+    max-width: 350px;
     text-align: center;
+    font-size: 14px;
+    box-shadow: 0 4px 8px var(--sombra);
 }
 
 .messages .success {
@@ -82,28 +83,30 @@ h2 {
 
 /* Modal para registro */
 .modal {
-    display: none; /* Escondido por defecto */
+    display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 10;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4); /* Fondo semi-transparente */
+    background-color: rgba(0, 0, 0, 0.4);
+    animation: fadeIn var(--transicion);
 }
 
 /* Contenido del modal */
 .modal-content {
     background-color: #fff;
     margin: 10% auto;
-    padding: 20px;
+    padding: 30px;
     border: 1px solid var(--verde-claro);
     width: 100%;
-    max-width: 400px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
     text-align: center;
+    animation: slideDown var(--transicion);
 }
 
 /* Botón de cierre del modal */
@@ -113,74 +116,191 @@ h2 {
     font-size: 24px;
     font-weight: bold;
     cursor: pointer;
+    transition: color var(--transicion);
 }
 
 .close:hover {
     color: var(--gris-texto);
 }
 
+/* Título del modal */
+.modal-content h3 {
+    margin-bottom: 20px;
+    color: var(--azul-logo);
+}
+
+/* Botones en el modal */
+.modal-content button {
+    padding: 10px 20px;
+    background-color: var(--verde-boton);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: var(--transicion);
+}
+
+.modal-content button:hover {
+    background-color: var(--verde-suave);
+}
+
 /* Input para formularios */
 input[type="text"],
-input[type="password"] {
-    padding: 10px;
-    border-radius: 5px;
+input[type="password"],
+input[type="email"] {
+    padding: 12px;
+    border-radius: 8px;
     border: 1px solid var(--verde-claro);
     background-color: var(--fondo-claro);
     width: 100%;
-    max-width: 300px;
-    margin: 5px 0;
+    margin: 10px 0;
     font-size: 14px;
+    box-sizing: border-box;
+    transition: border var(--transicion);
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus {
+    border-color: var(--azul-logo);
+    outline: none;
 }
 
 /* Botones */
 button {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-/* Botón de Iniciar Sesión */
-button[name="login"] {
     padding: 12px 20px;
-    background: linear-gradient(135deg, var(--azul-logo), var(--verde-suave));
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
     border: none;
     border-radius: 8px;
+    font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform var(--transicion), box-shadow var(--transicion);
+}
+
+/* Botón de Iniciar Sesión */
+button[name="login"] {
+    background: linear-gradient(135deg, var(--azul-logo), var(--verde-suave));
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 6px 12px var(--sombra);
     margin-top: 20px;
 }
 
 button[name="login"]:hover {
     background: linear-gradient(135deg, var(--verde-claro), var(--verde-suave));
     transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 button[name="login"]:active {
     transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Botones secundarios */
 .btn-primary {
     background-color: var(--azul-logo);
-    color: white;
+    color: #fff;
+    transition: var(--transicion);
 }
 
 .btn-primary:hover {
     background-color: var(--verde-suave);
+    transform: scale(1.05);
 }
 
 .btn-secondary {
     background-color: var(--verde-claro);
     color: var(--azul-logo);
+    transition: var(--transicion);
 }
 
 .btn-secondary:hover {
     background-color: var(--verde-suave);
+}
+
+/* Ajuste de inputs */
+.modal-content input[type="text"],
+.modal-content input[type="password"],
+.modal-content input[type="email"],
+.modal-content select {
+    width: 90%;
+    margin: 10px auto;
+    padding: 12px;
+    border: 1px solid var(--verde-claro);
+    border-radius: 6px;
+    background-color: #fbfbfb;
+    transition: border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.modal-content input:focus {
+    border: 1px solid var(--azul-logo);
+    box-shadow: 0 0 8px rgba(0, 51, 102, 0.3);
+    outline: none;
+}
+
+/* Espaciado de las etiquetas y descripciones */
+.modal-content label {
+    display: block;
+    text-align: left;
+    font-size: 14px;
+    color: var(--gris-texto);
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.modal-content p {
+    font-size: 12px;
+    color: #555;
+    margin: 5px 0;
+}
+
+/* Mejoras al botón */
+.modal-content button {
+    margin-top: 20px;
+    width: 100%;
+    max-width: 200px;
+    padding: 12px;
+    background-color: var(--verde-boton);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+
+.modal-content button:hover {
+    background-color: var(--verde-suave);
+    transform: scale(1.05);
+}
+
+.modal-content button:active {
+    transform: scale(1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Mejoras al modal */
+.modal-content {
+    border: 2px solid var(--verde-claro);
+    padding: 30px 20px;
+    border-radius: 10px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    animation: slideDown 0.4s ease-in-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

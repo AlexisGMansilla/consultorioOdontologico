@@ -2,6 +2,7 @@ from django.urls import path
 from django.shortcuts import redirect  # Asegúrate de importar redirect
 from . import views
 from datetime import datetime
+app_name = 'turnos'
 
 urlpatterns = [
     # Redirigir la URL base de turnos al calendario del mes y año actuales

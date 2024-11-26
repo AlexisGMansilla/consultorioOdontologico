@@ -1,50 +1,49 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Paciente  # Asegúrate de tener el modelo Paciente o ajusta el nombre según tu modelo
+from .models import Paciente
 from django.contrib.auth.decorators import login_required
 from .forms import PacienteForm
 from django.contrib import messages
-from django.http import JsonResponse #ODONTO
-import json #ODONTO
+from django.http import JsonResponse
+import json
 
 @login_required
 def pacientes_view(request):
     pacientes = Paciente.objects.all()  # Recupera todos los pacientes
     return render(request, 'pacientes/pacientes.html', {'pacientes': pacientes})
 
+@login_required
 def historia_clinica(request, paciente_id):
     paciente = get_object_or_404(Paciente, id=paciente_id)
-    
+
     if request.method == 'POST':
         form = PacienteForm(request.POST, instance=paciente)
         if form.is_valid():
             form.save()
             messages.success(request, 'Los datos del paciente han sido actualizados.')
-            return redirect('pacientes')  # Redirige a la vista de pacientes después de guardar
+            return redirect('pacientes:listado')  # Redirige a la lista de pacientes
         else:
             messages.error(request, 'Hubo un error al actualizar los datos.')
     else:
         form = PacienteForm(instance=paciente)
-    
+
     return render(request, 'pacientes/historia_clinica.html', {'form': form, 'paciente': paciente})
 
+@login_required
 def crear_paciente(request):
     if request.method == 'POST':
         form = PacienteForm(request.POST)
         if form.is_valid():
             paciente = form.save(commit=False)
             # Inicializar el odontograma vacío
-            paciente.odontograma = {
-                "superior_izquierdo": [{"numero": i, "estado": "Sano"} for i in range(18, 10, -1)],
-                "superior_derecho": [{"numero": i, "estado": "Sano"} for i in range(21, 29)],
-                "inferior_izquierdo": [{"numero": i, "estado": "Sano"} for i in range(48, 40, -1)],
-                "inferior_derecho": [{"numero": i, "estado": "Sano"} for i in range(31, 39)],
-            }
+            paciente.inicializar_odontograma()
             paciente.save()
-            return redirect('pacientes')  # Redirige a la lista de pacientes
+            messages.success(request, 'El paciente ha sido registrado con éxito.')
+            return redirect('pacientes:listado')  # Redirige a la lista de pacientes
     else:
         form = PacienteForm()
     return render(request, 'pacientes/crear_paciente.html', {'form': form})
 
+@login_required
 def ver_odontograma(request, paciente_id):
     paciente = get_object_or_404(Paciente, id=paciente_id)
 
@@ -66,12 +65,7 @@ def ver_odontograma(request, paciente_id):
     # Si es un GET, renderiza el odontograma
     if not paciente.odontograma:
         # Inicializa un odontograma vacío si no existe
-        paciente.odontograma = {
-            "superior_izquierdo": [{"numero": i, "estado": "Sano"} for i in range(18, 10, -1)],
-            "superior_derecho": [{"numero": i, "estado": "Sano"} for i in range(21, 29)],
-            "inferior_izquierdo": [{"numero": i, "estado": "Sano"} for i in range(48, 40, -1)],
-            "inferior_derecho": [{"numero": i, "estado": "Sano"} for i in range(31, 39)],
-        }
+        paciente.inicializar_odontograma()
         paciente.save()
 
-    return render(request, 'ver_odontograma.html', {'paciente': paciente, 'odontograma': paciente.odontograma})
+    return render(request, 'pacientes/ver_odontograma.html', {'paciente': paciente, 'odontograma': paciente.odontograma})

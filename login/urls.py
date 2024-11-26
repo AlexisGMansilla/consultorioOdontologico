@@ -3,8 +3,9 @@ from django.urls import path
 from . import views
 from django.contrib.auth.views import LogoutView
 
+app_name = 'login'
+
 urlpatterns = [
-    path('', views.login_register_view, name='login'),  # Login y registro
-    path('home/', views.home, name='home'),  # Página de inicio
-    path('logout/', LogoutView.as_view(), name='logout'),  # URL para cerrar sesión
+    path('', views.login_register_view, name='login'),  
+    path('logout/', LogoutView.as_view(next_page='login:login'), name='logout'), 
 ]

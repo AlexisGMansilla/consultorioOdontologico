@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Menú Principal{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+{% block content %}
+<div>
+    <h1>Bienvenido al Consultorio Odontológico</h1>
+    <p>Esta es la página principal del sistema.</p>
+</div>
+{% endblock %}
+{% block extra_js %}
+{% endblock %}

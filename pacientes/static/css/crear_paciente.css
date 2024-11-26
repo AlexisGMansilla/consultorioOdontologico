@@ -1,0 +1,116 @@
+/* Contenedor general */
+.container {
+    background-color: var(--fondo-claro);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 800px; /* Ancho más amplio para más espacio */
+    margin: 0 auto;
+}
+
+/* Título principal */
+h2 {
+    color: var(--azul-logo);
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.8rem; /* Tamaño más grande para destacar el título */
+}
+
+/* Fila del formulario */
+.row {
+    margin-bottom: 1rem;
+}
+
+/* Columnas del formulario */
+.col-md-6,
+.col-12 {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Etiquetas de los campos */
+form label {
+    font-weight: bold;
+    color: var(--azul-logo);
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+/* Campos del formulario */
+form input[type="text"],
+form input[type="email"],
+form input[type="date"],
+form select,
+form textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid var(--verde-agua);
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #333;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #fff; /* Fondo blanco para contraste */
+}
+
+/* Campo de Observación ocupa el ancho completo */
+form textarea {
+    grid-column: 1 / -1;
+    max-height: 140px;
+    resize: vertical;
+}
+
+/* Efecto hover y focus en campos */
+form input[type="text"]:focus,
+form input[type="email"]:focus,
+form input[type="date"]:focus,
+form select:focus,
+form textarea:focus {
+    border-color: var(--azul-logo);
+    box-shadow: 0 0 6px var(--azul-logo);
+    outline: none;
+}
+
+/* Botón de guardar */
+.btn-primary {
+    background-color: var(--azul-logo);
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Efecto hover y active en el botón */
+.btn-primary:hover {
+    background-color: #00264d; /* Azul más oscuro */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary:active {
+    background-color: #001f3d; /* Azul aún más oscuro */
+    transform: translateY(0);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+    .container {
+        padding: 1.5rem;
+    }
+
+    form {
+        grid-template-columns: 1fr; /* Una sola columna en pantallas pequeñas */
+    }
+
+    .btn-primary {
+        font-size: 1rem;
+    }
+}

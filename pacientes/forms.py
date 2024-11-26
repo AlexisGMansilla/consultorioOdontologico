@@ -8,6 +8,8 @@ class PacienteForm(forms.ModelForm):
         fields = ['nombre', 'apellido', 'dni', 'fecha_nacimiento', 'telefono', 'direccion', 'genero', 'email', 'observacion']
         widgets = {
             'fecha_nacimiento': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
+            'observacion': forms.Textarea(attrs={'class': 'form-control observacion-field'}),  # Clase específica
+
         }
 # Override para asegurar el formato correcto
     def __init__(self, *args, **kwargs):
