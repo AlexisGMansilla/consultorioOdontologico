@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Odontograma de {{ paciente.nombre }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/odontograma.css' %}">
+{% endblock %}
+
+{% block content %}
+<h2 class="my-4">Odontograma de {{ paciente.nombre }}</h2>
+<div class="odontograma-container my-4" data-paciente-id="{{ paciente.id }}">
+    <h2 class="cuadrante-titulo" id="titulo-1">1</h2>
+    <h2 class="cuadrante-titulo" id="titulo-2">2</h2>
+    <h2 class="cuadrante-titulo" id="titulo-4">3</h2>
+    <h2 class="cuadrante-titulo" id="titulo-3">4</h2>
+
+    <div class="linea-vertical"></div>
+    <div class="linea-horizontal"></div>
+
+    <div class="odontograma">
+        <div class="cuadrante" id="superior-izquierdo">
+            <div class="fila">
+                {% for diente in dientes_superior_izquierdo %}
+                <div class="diente-column">
+                    <div class="numero-diente">{{ diente }}</div>
+                    <div id="diente-{{ diente }}" class="container"
+                        data-estado='{"arriba":"Sano","derecha":"Sano","izquierda":"Sano","abajo":"Sano","central":"Sano"}'
+                        data-numero="{{ diente }}" onclick="abrirModal('{{ diente }}')">
+                        <!-- Mostrar el número del diente -->
+                        <div class="cara arriba" data-cara="arriba"></div>
+                        <div class="cara derecha" data-cara="derecha"></div>
+                        <div class="cara izquierda" data-cara="izquierda"></div>
+                        <div class="cara abajo" data-cara="abajo"></div>
+                        <div class="cara central" data-cara="central"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+        <div class="cuadrante" id="superior-derecho">
+            <div class="fila">
+                {% for diente in dientes_superior_derecho %}
+                <div class="diente-column">
+                    <div class="numero-diente">{{ diente }}</div>
+                    <div id="diente-{{ diente }}" class="container"
+                        data-estado='{"arriba":"Sano","derecha":"Sano","izquierda":"Sano","abajo":"Sano","central":"Sano"}'
+                        data-numero="{{ diente }}" onclick="abrirModal('{{ diente }}')">
+                        <!-- Mostrar el número del diente -->
+                        <div class="cara arriba" data-cara="arriba"></div>
+                        <div class="cara derecha" data-cara="derecha"></div>
+                        <div class="cara izquierda" data-cara="izquierda"></div>
+                        <div class="cara abajo" data-cara="abajo"></div>
+                        <div class="cara central" data-cara="central"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="cuadrante" id="inferior-izquierdo">
+            <div class="fila">
+                {% for diente in dientes_inferior_izquierdo %}
+                <div class="diente-column">
+                    <div class="numero-diente">{{ diente }}</div>
+                    <div id="diente-{{ diente }}" class="container"
+                        data-estado='{"arriba":"Sano","derecha":"Sano","izquierda":"Sano","abajo":"Sano","central":"Sano"}'
+                        data-numero="{{ diente }}" onclick="abrirModal('{{ diente }}')">
+                        <!-- Mostrar el número del diente -->
+                        <div class="cara arriba" data-cara="arriba"></div>
+                        <div class="cara derecha" data-cara="derecha"></div>
+                        <div class="cara izquierda" data-cara="izquierda"></div>
+                        <div class="cara abajo" data-cara="abajo"></div>
+                        <div class="cara central" data-cara="central"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="cuadrante" id="inferior-derecho">
+            <div class="fila">
+                {% for diente in dientes_inferior_derecho %}
+                <div class="diente-column">
+                    <div class="numero-diente">{{ diente }}</div>
+                    <div id="diente-{{ diente }}" class="container"
+                        data-estado='{"arriba":"Sano","derecha":"Sano","izquierda":"Sano","abajo":"Sano","central":"Sano"}'
+                        data-numero="{{ diente }}" onclick="abrirModal('{{ diente }}')">
+                        <!-- Mostrar el número del diente -->
+                        <div class="cara arriba" data-cara="arriba"></div>
+                        <div class="cara derecha" data-cara="derecha"></div>
+                        <div class="cara izquierda" data-cara="izquierda"></div>
+                        <div class="cara abajo" data-cara="abajo"></div>
+                        <div class="cara central" data-cara="central"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="referencias-colores my-4">
+    <h3>Referencias</h3>
+    <ul>
+        <li><span class="color-sano"></span> Sano</li>
+        <li><span class="color-caries"></span> Caries</li>
+        <li><span class="color-restaurado"></span> Restaurado</li>
+        <li><span class="color-ausente"></span> Ausente</li>
+    </ul>
+</div>
+
+<div class="modal" id="modal-diente">
+    <div class="modal-content">
+        <span class="close" id="btn-cerrar">&times;</span>
+        <h3 id="modal-titulo">Editar Diente <span id="diente-numero"></span></h3>
+        <div class="estado-caras">
+            <label for="estado-arriba">Cara Superior:</label>
+            <select id="estado-arriba">
+                <option value="Sano">Sano</option>
+                <option value="Caries">Caries</option>
+                <option value="Restaurado">Restaurado</option>
+                <option value="Ausente">Ausente</option>
+            </select>
+            <label for="estado-derecha">Cara Derecha:</label>
+            <select id="estado-derecha">
+                <option value="Sano">Sano</option>
+                <option value="Caries">Caries</option>
+                <option value="Restaurado">Restaurado</option>
+                <option value="Ausente">Ausente</option>
+            </select>
+            <label for="estado-izquierda">Cara Izquierda:</label>
+            <select id="estado-izquierda">
+                <option value="Sano">Sano</option>
+                <option value="Caries">Caries</option>
+                <option value="Restaurado">Restaurado</option>
+                <option value="Ausente">Ausente</option>
+            </select>
+            <label for="estado-abajo">Cara Inferior:</label>
+            <select id="estado-abajo">
+                <option value="Sano">Sano</option>
+                <option value="Caries">Caries</option>
+                <option value="Restaurado">Restaurado</option>
+                <option value="Ausente">Ausente</option>
+            </select>
+            <label for="estado-central">Cara Central:</label>
+            <select id="estado-central">
+                <option value="Sano">Sano</option>
+                <option value="Caries">Caries</option>
+                <option value="Restaurado">Restaurado</option>
+                <option value="Ausente">Ausente</option>
+            </select>
+        </div>
+        <button class="btn btn-primary" id="btn-guardar">Guardar Cambios</button>
+    </div>
+</div>
+
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/odontograma.js' %}"></script>
+{% endblock %}

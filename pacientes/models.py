@@ -36,3 +36,15 @@ class Paciente(models.Model):
     def edad(self):
         today = date.today()
         return today.year - self.fecha_nacimiento.year - ((today.month, today.day) < (self.fecha_nacimiento.month, self.fecha_nacimiento.day))
+
+class DienteEstado(models.Model):
+    paciente = models.ForeignKey('Paciente', on_delete=models.CASCADE)  # Relación con el paciente
+    numero_diente = models.IntegerField()  # Número del diente (11-48)
+    cara_arriba = models.CharField(max_length=20, default="Sano")  # Estado de la cara superior
+    cara_derecha = models.CharField(max_length=20, default="Sano")  # Estado de la cara derecha
+    cara_izquierda = models.CharField(max_length=20, default="Sano")  # Estado de la cara izquierda
+    cara_abajo = models.CharField(max_length=20, default="Sano")  # Estado de la cara inferior
+    cara_central = models.CharField(max_length=20, default="Sano")  # Estado de la cara central
+
+    def __str__(self):
+        return f"Diente {self.numero_diente} - Paciente {self.paciente.nombre}"
