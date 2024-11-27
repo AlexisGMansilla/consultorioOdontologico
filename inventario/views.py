@@ -2,21 +2,29 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Utensilio
 from .forms import UtensilioForm
 from django.http import JsonResponse
+from django.shortcuts import render
+from django.contrib import messages
+
+
 
 def lista_utensilios(request):
-    utensilios = Utensilio.objects.all()
-    form = UtensilioForm()
-    return render(request, 'inventario/lista_utensilios.html', {'utensilios': utensilios, 'form': form})
+    utensilios = Utensilio.objects.all()  # Obtén todos los utensilios
+    return render(request, 'inventario/lista_utensilios.html', {'utensilios': utensilios})
 
 def agregar_utensilio(request):
     if request.method == 'POST':
-        form = UtensilioForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('lista_utensilios')
-    else:
-        form = UtensilioForm()
-    return render(request, 'inventario/lista_utensilios.html', {'form': form})
+        nombre = request.POST.get('nombre')
+        cantidad = request.POST.get('cantidad')
+
+        # Guarda el utensilio en la base de datos
+        nuevo_utensilio = Utensilio(nombre=nombre, cantidad=cantidad)
+        nuevo_utensilio.save()
+
+        # Redirige de nuevo a la lista de utensilios
+        return redirect('inventario:lista_utensilios')
+
+    # Renderiza el formulario si el método es GET
+    return render(request, 'inventario/agregar_utensilio.html')
 
 def eliminar_utensilio(request, id):
     if request.method == 'POST':
@@ -25,15 +33,22 @@ def eliminar_utensilio(request, id):
         return JsonResponse({'success': True})
     return JsonResponse({'error': 'Método no permitido'}, status=405)
     
-def editar_utensilio(request):
+def editar_utensilio(request, id):
+    utensilio = get_object_or_404(Utensilio, id=id)
     if request.method == 'POST':
-        utensilio_id = request.POST.get('id')
-        nombre = request.POST.get('nombre')
-        cantidad = request.POST.get('cantidad')
+        # Cantidad antes de la edición
+        cantidad_anterior = utensilio.cantidad
 
-        utensilio = get_object_or_404(Utensilio, id=utensilio_id)
-        utensilio.nombre = nombre
-        utensilio.cantidad = cantidad
+        # Actualizar datos
+        utensilio.nombre = request.POST['nombre']
+        nueva_cantidad = int(request.POST['cantidad'])
+        utensilio.cantidad = nueva_cantidad
+
+        # Calcular la diferencia en usos
+        diferencia = cantidad_anterior - nueva_cantidad
+        if diferencia > 0:
+            utensilio.usos += diferencia  # Incrementa los usos si se reduce la cantidad
+
         utensilio.save()
-
-        return redirect('inventario')  # Redirige a la página principal de inventario
+        messages.success(request, "Utensilio actualizado correctamente.")
+        return redirect('inventario:lista_utensilios')
