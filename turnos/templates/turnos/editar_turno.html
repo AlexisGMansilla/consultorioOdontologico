@@ -1,7 +1,38 @@
-<h1>Editar Turno</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Guardar</button>
-</form>
-<a href="{% url 'vista_calendario' year=turno.fecha.year month=turno.fecha.month %}">Volver al calendario</a>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Turno</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</head>
+<body>
+    <h1>Editar Turno</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+    </form>
+    <a href="{% url 'turnos:vista_calendario' year=turno.fecha.year month=turno.fecha.month %}">Volver al calendario</a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar Flatpickr para el campo de fecha
+            flatpickr("[name='fecha']", {
+                enableTime: false,       // Solo seleccionar fecha
+                dateFormat: "Y-m-d",     // Formato compatible con Django
+                defaultDate: "{{ turno.fecha|date:'Y-m-d' }}",  // Fecha actual del turno como predeterminada
+            });
+
+            // Inicializar Flatpickr para el campo de hora (si existe)
+            flatpickr("[name='hora']", {
+                enableTime: true,
+                noCalendar: true,
+                dateFormat: "H:i",
+                time_24hr: true,
+                defaultDate: "{{ turno.hora|date:'H:i' }}",  // Hora actual como predeterminada
+            });
+        });
+    </script>
+</body>
+</html>

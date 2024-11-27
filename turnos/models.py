@@ -1,7 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from pacientes.models import Paciente  # Importar el modelo de pacientes
-
 class Turno(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)  # Relación con el modelo Paciente
     fecha = models.DateField()

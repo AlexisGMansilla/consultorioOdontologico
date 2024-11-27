@@ -1,13 +1,17 @@
 import calendar
 from datetime import date, datetime
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Turno
+from .models import Turno, Paciente
 from .forms import TurnoForm
 import locale  # Importamos locale para configuraciones de idioma
 
+
 def vista_calendario(request, year=None, month=None):
     # Establecer el idioma en español para mostrar los nombres de los meses correctamente
-    locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')  # Configura según tu sistema operativo
+    try:
+        locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')  # Configura según tu sistema operativo
+    except locale.Error:
+        pass  # En algunos sistemas, esto puede no estar disponible
 
     # Obtener el año y mes actuales si no se proporcionan
     if not year:
@@ -54,23 +58,33 @@ def vista_calendario(request, year=None, month=None):
 
 
 def agregar_turno(request, year, month, day):
+    # Aseguramos que el día siempre esté representado con dos dígitos
+    day = str(day).zfill(2)
+
+    # Inicializar la fecha para usarla en el formulario y en la lógica
+    fecha_inicial = date(year, month, int(day))
+
+    # Obtén los pacientes desde el modelo
+    pacientes = Paciente.objects.all()  # Asegúrate de tener pacientes en tu base de datos
+
     if request.method == 'POST':
         form = TurnoForm(request.POST)
         if form.is_valid():
             form.save()
             # Redirigir al calendario después de guardar
-            return redirect('vista_calendario', year=year, month=month)
+            return redirect('turnos:vista_calendario', year=year, month=month)
     else:
         # Establecer la fecha inicial del formulario
-        form = TurnoForm(initial={'fecha': date(year, month, day)})
+        form = TurnoForm(initial={'fecha': fecha_inicial})
 
-    # Pasar los valores year y month al contexto
     return render(request, 'turnos/agregar_turno.html', {
         'form': form,
+        'pacientes': pacientes,  # Pasar pacientes al contexto
         'year': year,
         'month': month,
-        'day': day,  # Incluimos day en el contexto por si se necesita
+        'day': day,  # Incluye el día en el contexto
     })
+
 
 
 def editar_turno(request, turno_id):
@@ -79,14 +93,18 @@ def editar_turno(request, turno_id):
         form = TurnoForm(request.POST, instance=turno)
         if form.is_valid():
             form.save()
-            return redirect('vista_calendario', year=turno.fecha.year, month=turno.fecha.month)
+            return redirect('turnos:vista_calendario', year=turno.fecha.year, month=turno.fecha.month)
     else:
         form = TurnoForm(instance=turno)
-    return render(request, 'turnos/editar_turno.html', {'form': form, 'turno': turno})
+    return render(request, 'turnos/editar_turno.html', {
+        'form': form,
+        'turno': turno,  # Pasamos el turno actual para acceder a sus datos en el template
+    })
+
 
 
 def eliminar_turno(request, turno_id):
     turno = get_object_or_404(Turno, id=turno_id)
     year, month = turno.fecha.year, turno.fecha.month
     turno.delete()
-    return redirect('vista_calendario', year=year, month=month)
+    return redirect('turnos:vista_calendario', year=year, month=month)

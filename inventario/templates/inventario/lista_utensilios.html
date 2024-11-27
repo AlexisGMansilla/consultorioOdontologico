@@ -6,6 +6,9 @@
     <title>Inventario</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/inventario.css' %}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+        <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <!-- Navbar -->
@@ -13,20 +16,20 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'pacientes' %}">Pacientes</a>
+                    <a class="nav-link" href="#">Pacientes</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Turnos</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url 'inventario' %}">Inventario</a>
+                    <a href="#">Inventario</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Agregar Obra Social</a>
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item nav-form">
-                    <form action="{% url 'logout' %}" method="post">
+                    <form action="#" method="post">
                         {% csrf_token %}
                         <button type="submit" class="nav-link btn btn-link">Cerrar Sesión</button>
                     </form>
@@ -39,13 +42,24 @@
     <div class="container">
         <h2>Inventario</h2>
         <!-- Botón para agregar utensilio -->
-        <button class="btn btn-success" onclick="document.getElementById('modal').style.display='block'">Agregar Utensilio</button>
+        <div class="button-container" style="display: flex; gap: 0.5rem;">
+        <button class="btn btn-success" onclick="openAddModal()">Agregar Utensilio</button>
+        <button class="btn btn-success" onclick="openUsageModal()">Ver Utensilios Más Usados</button>
+    </div>
+
+        <div id="usageModal" class="modal" style="display: none;">
+            <div class="modal-content" style="width: 90%; max-width: 800px;">
+                <h2>Utensilios Más Usados</h2>
+                <canvas id="usageChart" style="max-width: 100%;"></canvas>
+                <button class="btn btn-secondary" onclick="closeUsageModal()">Cerrar</button>
+            </div>
+        </div>
 
         <!-- Contenedor principal de tabla y referencias -->
         <div class="main-content" style="display: flex; justify-content: space-between; align-items: flex-start;">
             <!-- Tabla de inventario -->
             <div class="table-container" style="width: 70%;">
-                <table class="inventory-table">
+                <table id="inventoryTable" class="inventory-table" style="width: 100%;">
                     <thead>
                         <tr>
                             <th>Nombre</th>
@@ -103,28 +117,28 @@
             </div>
         </div>
     </div>
-<!-- Modal para agregar utensilio -->
-<div id="modal" class="modal" style="display:none;">
-    <div class="modal-content">
-        <h2>Agregar Utensilio</h2>
-        <form action="{% url 'agregar_utensilio' %}" method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="nombre">Nombre del Utensilio:</label>
-                <input type="text" id="nombre" name="nombre" required>
-            </div>
-            <div class="form-group">
-                <label for="cantidad">Cantidad:</label>
-                <input type="number" id="cantidad" name="cantidad" min="1" required>
-            </div>
-            <div class="modal-buttons">
-                <button type="submit" class="btn btn-success">Guardar</button>
-                <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal').style.display='none'">Cancelar</button>
-            </div>
-        </form>
-    </div>
-</div>
 
+    <!-- Modal para agregar utensilio -->
+    <div id="addModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>Agregar Utensilio</h2>
+            <form id="addForm" action="{% url 'inventario:agregar_utensilio' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="nombre">Nombre del Utensilio</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Ejemplo: Guantes" required>
+                </div>
+                <div class="form-group">
+                    <label for="cantidad">Cantidad</label>
+                    <input type="number" id="cantidad" name="cantidad" min="1" placeholder="Ejemplo: 20" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeAddModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Modal de confirmación de eliminación -->
     <div id="deleteModal" class="modal" style="display: none;">
@@ -138,31 +152,68 @@
         </div>
     </div>
 
-<!-- Modal de edición -->
-<div id="editModal" class="modal" style="display: none;">
-    <div class="modal-content">
-        <h2>Editar Utensilio</h2>
-        <form id="editForm" action="{% url 'editar_utensilio' %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" id="editId" name="id">
-            <div class="form-group">
-                <label for="editNombre">Nombre</label>
-                <input type="text" id="editNombre" name="nombre" required>
-            </div>
-            <div class="form-group">
-                <label for="editCantidad">Cantidad</label>
-                <input type="number" id="editCantidad" name="cantidad" min="1" required>
-            </div>
-            <div class="modal-buttons">
-                <button type="submit" class="btn btn-success">Guardar</button>
-                <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancelar</button>
-            </div>
-        </form>
+    <!-- Modal de edición -->
+    <div id="editModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>Editar Utensilio</h2>
+            <form id="editForm" action="" method="post">
+                {% csrf_token %}
+                <input type="hidden" id="editId" name="id">
+                <div class="form-group">
+                    <label for="editNombre">Nombre</label>
+                    <input type="text" id="editNombre" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="editCantidad">Cantidad</label>
+                    <input type="number" id="editCantidad" name="cantidad" min="0" required oninput="updateDifference()">
+                    <small id="differenceMessage" style="color: red; display: none;"></small>
+                </div>
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            </form>
+        </div>
     </div>
-</div>
 
+    <!-- DataTables Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
+        $(document).ready(function () {
+            $('#inventoryTable').DataTable({
+                language: {
+                    processing: "Procesando...",
+                    search: "Buscar:",
+                    lengthMenu: "Mostrar _MENU_ Utensilios",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ Utensilios",
+                    infoEmpty: "Mostrando 0 a 0 de 0 Utensilios",
+                    infoFiltered: "(filtrado de _MAX_ Utensilios totales)",
+                    loadingRecords: "Cargando...",
+                    zeroRecords: "No se encontraron Utensilios coincidentes",
+                    emptyTable: "No hay datos disponibles en la tabla",
+                    paginate: {
+                        first: "Primero",
+                        previous: "Anterior",
+                        next: "Siguiente",
+                        last: "Último"
+                    },
+                    aria: {
+                        sortAscending: ": activar para ordenar la columna ascendente",
+                        sortDescending: ": activar para ordenar la columna descendente"
+                    }
+                },
+                pageLength: 5,
+                lengthMenu: [5, 10, 25, 50],
+            });
+        });
+
         let deleteId = null;
+
+        function openAddModal() {
+            document.getElementById('addModal').style.display = 'flex';
+        }
+
+        function closeAddModal() {
+            document.getElementById('addModal').style.display = 'none';
+        }
 
         function openDeleteModal(id) {
             deleteId = id;
@@ -184,7 +235,7 @@
                     }
                 }).then(response => {
                     if (response.ok) {
-                        location.reload(); // Recargar la página para actualizar la lista
+                        location.reload();
                     } else {
                         alert('Error al eliminar el utensilio');
                     }
@@ -198,12 +249,84 @@
             document.getElementById('editId').value = id;
             document.getElementById('editNombre').value = nombre;
             document.getElementById('editCantidad').value = cantidad;
+
+            const editForm = document.getElementById('editForm');
+            editForm.action = `/inventario/editar/${id}/`;
+
             document.getElementById('editModal').style.display = 'flex';
         }
 
         function closeEditModal() {
             document.getElementById('editModal').style.display = 'none';
-        }
+        }  
     </script>
+    <script>
+function openUsageModal() {
+    const utensilios = [
+        {% for utensilio in utensilios %}
+        {
+            nombre: "{{ utensilio.nombre }}",
+            usos: {{ utensilio.usos }}
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    const nombres = utensilios.map(u => u.nombre);
+    const usos = utensilios.map(u => u.usos);
+
+    const ctx = document.getElementById('usageChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: nombres,
+            datasets: [{
+                label: 'Usos',
+                data: usos,
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    document.getElementById('usageModal').style.display = 'flex';
+}
+
+function closeUsageModal() {
+    document.getElementById('usageModal').style.display = 'none';
+}
+function updateDifference() {
+    const originalCantidad = parseInt(document.getElementById('editCantidad').dataset.originalCantidad);
+    const newCantidad = parseInt(document.getElementById('editCantidad').value) || 0;
+    const difference = originalCantidad - newCantidad;
+
+    const messageElement = document.getElementById('differenceMessage');
+    if (difference > 0) {
+        messageElement.textContent = `Has disminuido ${difference} unidades.`;
+        messageElement.style.display = 'block';
+    } else {
+        messageElement.style.display = 'none';
+    }
+}
+
+function openEditModal(id, nombre, cantidad) {
+    document.getElementById('editId').value = id;
+    document.getElementById('editNombre').value = nombre;
+    const editCantidadInput = document.getElementById('editCantidad');
+    editCantidadInput.value = cantidad;
+    editCantidadInput.dataset.originalCantidad = cantidad; // Guardar cantidad original
+
+    const editForm = document.getElementById('editForm');
+    editForm.action = `/inventario/editar/${id}/`;
+
+    document.getElementById('editModal').style.display = 'flex';
+}
+</script>
 </body>
 </html>
