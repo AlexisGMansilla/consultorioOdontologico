@@ -6,8 +6,10 @@ class TurnoForm(forms.ModelForm):
         model = Turno
         fields = ['paciente', 'fecha', 'hora', 'motivo']
         widgets = {
-            'fecha': forms.DateInput(attrs={'type': 'date'}),
-            'hora': forms.TextInput(attrs={'class': 'timepicker'}), 
+            'paciente': forms.Select(attrs={'class': 'form-control'}),
+            'fecha': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'hora': forms.TimeInput(attrs={'type': 'time', 'class': 'form-control'}),
+            'motivo': forms.Textarea(attrs={'class': 'form-control'}),
         }
     def clean(self):
         cleaned_data = super().clean()

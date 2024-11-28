@@ -1,58 +1,69 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Agregar Turno</title>
-    <!-- Estilos de Flatpickr -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-</head>
-<body>
-    <div class="container">
-        <h1>Agregar Turno</h1>
-        <form method="post">
-            {% csrf_token %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Agregar Turno{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'turnos/css/turnos_form.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="container-form">
+    <h1>Agregar Turno</h1>
+    <form method="post" class="form">
+        {% csrf_token %}
+        <div class="form-group">
             <label for="paciente">Paciente:</label>
-            <select name="paciente" id="paciente">
+            <select name="paciente" id="paciente" class="form-control">
                 {% for paciente in pacientes %}
                 <option value="{{ paciente.id }}">{{ paciente.nombre }} {{ paciente.apellido }}</option>
                 {% endfor %}
             </select>
-            
-            
+        </div>
         
+        <div class="form-group">
             <label for="fecha">Fecha:</label>
-            <input type="date" name="fecha" id="fecha" value="{{ fecha_inicial }}" required>
+            <input type="date" name="fecha" id="fecha" value="{{ fecha_inicial }}" required class="form-control">
+        </div>
         
+        <div class="form-group">
             <label for="hora">Hora:</label>
-            <input type="time" name="hora" id="hora" required>
+            <input type="time" name="hora" id="hora" required class="form-control">
+        </div>
         
+        <div class="form-group">
             <label for="motivo">Motivo:</label>
-            <textarea name="motivo" id="motivo"></textarea>
+            <textarea name="motivo" id="motivo" class="form-control"></textarea>
+        </div>
         
-            <button type="submit">Guardar</button>
-        </form>
-        <a href="{% url 'turnos:vista_calendario' year=year month=month %}" class="link-back">Volver al calendario</a>
-    </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a href="{% url 'turnos:vista_calendario' %}" class="btn btn-secondary">Volver al calendario</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
 
-    <!-- Scripts -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar Flatpickr para el campo de fecha
-            flatpickr("[name='fecha']", {
-                enableTime: false,       // Solo seleccionar fecha
-                dateFormat: "Y-m-d",     // Formato compatible con Django
-                defaultDate: "{{ turno.fecha|date:'Y-m-d' }}",  // Fecha actual del turno como predeterminada
-            });
-
-            // Inicializar Flatpickr para el campo de hora (si existe)
-            flatpickr("[name='hora']", {
-                enableTime: true,
-                noCalendar: true,
-                dateFormat: "H:i",
-                time_24hr: true,
-                defaultDate: "{{ turno.hora|date:'H:i' }}",  // Hora actual como predeterminada
-            });
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar Flatpickr para el campo de fecha
+        flatpickr("[name='fecha']", {
+            enableTime: false,
+            dateFormat: "Y-m-d",
+            defaultDate: "{{ turno.fecha|date:'Y-m-d' }}",
         });
-    </script>
-</body>
-</html>
+
+        // Inicializar Flatpickr para el campo de hora
+        flatpickr("[name='hora']", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            time_24hr: true,
+            defaultDate: "{{ turno.hora|date:'H:i' }}",
+        });
+    });
+</script>
+{% endblock %}

@@ -1,38 +1,62 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Editar Turno</title>
-    {% load static %}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Editar Turno{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'turnos/css/turnos_form.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="container-form">
     <h1>Editar Turno</h1>
-    <form method="post">
+    <form method="post" class="form">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Guardar</button>
+        <div class="form-group">
+            <label for="paciente">Paciente:</label>
+            {{ form.paciente|add_class:"form-control" }}
+        </div>
+        <div class="form-group">
+            <label for="fecha">Fecha:</label>
+            {{ form.fecha|add_class:"form-control" }}
+        </div>
+        <div class="form-group">
+            <label for="hora">Hora:</label>
+            {{ form.hora|add_class:"form-control" }}
+        </div>
+        <div class="form-group">
+            <label for="motivo">Motivo:</label>
+            {{ form.motivo|add_class:"form-control" }}
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a href="{% url 'turnos:vista_calendario' %}" class="btn btn-secondary">Volver al calendario</a>
+        </div>
     </form>
-    <a href="{% url 'turnos:vista_calendario' year=turno.fecha.year month=turno.fecha.month %}">Volver al calendario</a>
+</div>
+{% endblock %}
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar Flatpickr para el campo de fecha
-            flatpickr("[name='fecha']", {
-                enableTime: false,       // Solo seleccionar fecha
-                dateFormat: "Y-m-d",     // Formato compatible con Django
-                defaultDate: "{{ turno.fecha|date:'Y-m-d' }}",  // Fecha actual del turno como predeterminada
-            });
-
-            // Inicializar Flatpickr para el campo de hora (si existe)
-            flatpickr("[name='hora']", {
-                enableTime: true,
-                noCalendar: true,
-                dateFormat: "H:i",
-                time_24hr: true,
-                defaultDate: "{{ turno.hora|date:'H:i' }}",  // Hora actual como predeterminada
-            });
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar Flatpickr para el campo de fecha
+        flatpickr("[name='fecha']", {
+            enableTime: false,
+            dateFormat: "Y-m-d",
+            defaultDate: "{{ turno.fecha|date:'Y-m-d' }}",
         });
-    </script>
-</body>
-</html>
+
+        // Inicializar Flatpickr para el campo de hora
+        flatpickr("[name='hora']", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            time_24hr: true,
+            defaultDate: "{{ turno.hora|date:'H:i' }}",
+        });
+    });
+</script>
+{% endblock %}

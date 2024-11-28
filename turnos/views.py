@@ -6,28 +6,23 @@ from .forms import TurnoForm
 import locale  # Importamos locale para configuraciones de idioma
 
 
-def vista_calendario(request, year=None, month=None):
-    # Establecer el idioma en español para mostrar los nombres de los meses correctamente
+def vista_calendario(request):
+    # Establecer el idioma en español
     try:
-        locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')  # Configura según tu sistema operativo
+        locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
     except locale.Error:
-        pass  # En algunos sistemas, esto puede no estar disponible
+        pass
 
-    # Obtener el año y mes actuales si no se proporcionan
-    if not year:
-        year = datetime.now().year
-    if not month:
-        month = datetime.now().month
-
-    # Convertir a enteros (por si vienen como strings desde la URL)
-    year = int(year)
-    month = int(month)
+    # Obtener el año y mes actuales
+    now = datetime.now()
+    year = int(request.GET.get('year', now.year))  # Permitir modificar año opcionalmente desde el GET
+    month = int(request.GET.get('month', now.month))  # Igual para el mes
 
     # Crear el calendario del mes
     cal = calendar.Calendar()
     dias_del_mes = cal.itermonthdays(year, month)
 
-    # Obtener todos los turnos del mes actual
+    # Obtener los turnos del mes actual
     turnos = Turno.objects.filter(fecha__year=year, fecha__month=month)
 
     # Generar el nombre del mes en español
@@ -72,7 +67,7 @@ def agregar_turno(request, year, month, day):
         if form.is_valid():
             form.save()
             # Redirigir al calendario después de guardar
-            return redirect('turnos:vista_calendario', year=year, month=month)
+            return redirect('turnos:vista_calendario')
     else:
         # Establecer la fecha inicial del formulario
         form = TurnoForm(initial={'fecha': fecha_inicial})
@@ -93,7 +88,8 @@ def editar_turno(request, turno_id):
         form = TurnoForm(request.POST, instance=turno)
         if form.is_valid():
             form.save()
-            return redirect('turnos:vista_calendario', year=turno.fecha.year, month=turno.fecha.month)
+            return redirect('turnos:vista_calendario')
+
     else:
         form = TurnoForm(instance=turno)
     return render(request, 'turnos/editar_turno.html', {
@@ -107,4 +103,5 @@ def eliminar_turno(request, turno_id):
     turno = get_object_or_404(Turno, id=turno_id)
     year, month = turno.fecha.year, turno.fecha.month
     turno.delete()
-    return redirect('turnos:vista_calendario', year=year, month=month)
+    return redirect('turnos:vista_calendario')
+

@@ -9,7 +9,11 @@ import json
 @login_required
 def pacientes_view(request):
     pacientes = Paciente.objects.all()
-    return render(request, 'pacientes/pacientes.html', {'pacientes': pacientes})
+
+    # Asegúrate de pasar todos los datos necesarios al contexto
+    return render(request, 'pacientes/pacientes.html', {
+        'pacientes': pacientes,
+    })
 
 @login_required
 def historia_clinica(request, paciente_id):

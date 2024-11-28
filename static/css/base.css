@@ -20,7 +20,7 @@ body {
 
 /* Header */
 header {
-    background-color: var(--verde-suave);
+    background-color: var(--verde-claro);
     display: flex;
     justify-content: space-between; /* Espacio entre logo y menú */
     align-items: center; /* Centrar elementos verticalmente */
@@ -118,7 +118,7 @@ footer {
 }
 
 .btn-logout {
-    background-color: var(--verde-suave); /* Fondo acorde a tu paleta de colores */
+    background-color: var(--amarillo-suave); /* Fondo acorde a tu paleta de colores */
     border: none;
     color: var(--azul-logo); /* Texto con el color principal */
     font-weight: bold;
@@ -130,7 +130,7 @@ footer {
 }
 
 .btn-logout:hover {
-    background-color: var(--verde-claro); /* Cambio de color al pasar el mouse */
+    background-color: var(--verde-agua); /* Cambio de color al pasar el mouse */
     color: #333; /* Texto más oscuro para resaltar */
     text-decoration: none; /* Elimina el subrayado */
 }
