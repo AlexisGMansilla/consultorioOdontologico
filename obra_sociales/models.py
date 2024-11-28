@@ -17,7 +17,6 @@ class ObraSocial(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['nombre'], name='unique_nombre'),
-            models.UniqueConstraint(fields=['cobertura'], name='unique_cobertura'),
         ]
 
     def __str__(self):
