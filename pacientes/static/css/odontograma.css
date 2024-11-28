@@ -269,3 +269,145 @@
 .color-ausente {
     background-color: var(--color-ausente);
 }
+
+
+@media (max-width: 768px) {
+    /* Ajustar el contenedor principal */
+    .odontograma-container {
+        padding: 15px;
+    }
+
+    /* Reducir el tamaño de los cuadrantes */
+    .odontograma {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .cuadrante {
+        width: 100%;
+    }
+
+    /* Ajustar las filas dentro de los cuadrantes */
+    .fila {
+        justify-content: center;
+        gap: 10px;
+    }
+
+    /* Reducir el tamaño de los dientes */
+    .container {
+        width: 50px;
+        height: 50px;
+    }
+
+    .numero-diente {
+        font-size: 10px;
+    }
+
+    .cara {
+        border-width: 0.5px;
+    }
+
+    .cara.arriba,
+    .cara.abajo {
+        height: 15%;
+    }
+
+    .cara.izquierda,
+    .cara.derecha {
+        width: 15%;
+    }
+
+    .cara.central {
+        top: 15%;
+        bottom: 15%;
+        left: 15%;
+        right: 15%;
+    }
+
+    /* Ajustar los títulos de los cuadrantes */
+    .cuadrante-titulo {
+        font-size: 18px;
+    }
+
+    #titulo-1, #titulo-3 {
+        left: 5px;
+    }
+
+    #titulo-2, #titulo-4 {
+        right: 5px;
+    }
+
+    /* Modales */
+    .modal-content {
+        width: 90%;
+        max-width: 300px;
+        padding: 15px;
+    }
+
+    .modal-content h3 {
+        font-size: 16px;
+    }
+
+    .estado-caras label {
+        font-size: 12px;
+    }
+
+    .estado-caras select {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    /* Referencias */
+    .referencias-colores li {
+        font-size: 12px;
+    }
+
+    .referencias-colores span {
+        width: 15px;
+        height: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Ajustar aún más los dientes y cuadrantes */
+    .container {
+        width: 40px;
+        height: 40px;
+    }
+
+    .numero-diente {
+        font-size: 8px;
+    }
+
+    .cara.arriba,
+    .cara.abajo {
+        height: 12%;
+    }
+
+    .cara.izquierda,
+    .cara.derecha {
+        width: 12%;
+    }
+
+    .cara.central {
+        top: 12%;
+        bottom: 12%;
+        left: 12%;
+        right: 12%;
+    }
+
+    /* Ajustar títulos de cuadrantes */
+    .cuadrante-titulo {
+        font-size: 16px;
+    }
+
+    /* Ajustar referencias */
+    .referencias-colores li {
+        font-size: 10px;
+    }
+
+    .referencias-colores span {
+        width: 12px;
+        height: 12px;
+    }
+}

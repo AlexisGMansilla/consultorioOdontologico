@@ -21,10 +21,16 @@
 </head>
 <body>
     <header>
-        <div>
+        <div class="logo-container">
             <a href="{% url 'home' %}"><img src="/static/img/logoConsulOdonto.png" alt="Logo"></a>
+            <!-- Botón hamburguesa -->
+            <button class="hamburger" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
-        <nav>
+        <nav id="menu">
             <ul>
                 <li><a href="{% url 'home' %}">Inicio</a></li>
                 <li><a href="{% url 'turnos:vista_calendario' %}">Turnos</a></li>
@@ -39,11 +45,24 @@
                 </li>
             </ul>
         </nav>
-    </header>    
+    </header>
+    
     <!-- Contenido Dinámico -->
     <main>
         {% block content %}{% endblock %}
     </main>
 {% block extra_js %}{% endblock %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const menuToggle = document.getElementById('menuToggle');
+        const menu = document.getElementById('menu');
+
+        menuToggle.addEventListener('click', () => {
+            menu.classList.toggle('active');
+            menuToggle.classList.toggle('active');
+        });
+    });
+</script>
+
 </body>
 </html>

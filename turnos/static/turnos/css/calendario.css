@@ -337,3 +337,105 @@ td {
     animation: fadeIn 0.3s ease-in-out;
     border: 1px solid var(--modal-borde);
 }
+
+/* Responsividad general */
+@media (max-width: 600px) {
+    /* Ajustar el contenido principal */
+    .container {
+        width: 100%;
+        padding: 15px;
+    }
+
+    /* Tablas */
+    table {
+        font-size: 0.9rem;
+        overflow-x: auto;
+    }
+
+    th, td {
+        padding: 10px;
+    }
+
+    /* Modales */
+    .modal-content {
+        width: 95%;
+    }
+
+    #contenidoModal li {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    #contenidoModal button {
+        margin-left: 0;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Responsividad para pantallas medianas */
+@media (max-width: 768px) {
+    /* Navegación */
+    .navigation {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .navigation a {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Botones */
+    .btn {
+        width: 100%;
+    }
+
+    .btn-add {
+        font-size: 1rem;
+        padding: 10px;
+    }
+
+    .btn-edit, .btn-delete {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    /* Ajustes en la tabla */
+    table {
+        font-size: 0.9rem;
+    }
+
+    th, td {
+        padding: 10px;
+    }
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 480px) {
+    /* Contenido dentro del modal */
+    #contenidoModal ul {
+        padding: 0;
+    }
+
+    #contenidoModal li {
+        padding: 8px;
+    }
+
+    #contenidoModal button {
+        font-size: 0.8rem;
+    }
+
+    .btn-add {
+        font-size: 0.9rem;
+        padding: 8px 10px;
+    }
+
+    /* Modales */
+    .modal-content {
+        width: 90%;
+        padding: 15px;
+    }
+}
