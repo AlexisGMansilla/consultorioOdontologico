@@ -1,9 +1,14 @@
 import calendar
 from datetime import date, datetime
 from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Count
 from .models import Turno, Paciente
 from .forms import TurnoForm
 import locale  # Importamos locale para configuraciones de idioma
+from datetime import date
+from django.contrib import messages
+
+
 
 
 def vista_calendario(request, year=None, month=None):
@@ -57,32 +62,32 @@ def vista_calendario(request, year=None, month=None):
 
 
 
+
 def agregar_turno(request, year, month, day):
-    # Aseguramos que el día siempre esté representado con dos dígitos
-    day = str(day).zfill(2)
-
-    # Inicializar la fecha para usarla en el formulario y en la lógica
-    fecha_inicial = date(year, month, int(day))
-
-    # Obtén los pacientes desde el modelo
-    pacientes = Paciente.objects.all()  # Asegúrate de tener pacientes en tu base de datos
+    fecha_hoy = date.today().strftime('%Y-%m-%d')  # Fecha de hoy
+    fecha_inicial = date(year, month, day).strftime('%Y-%m-%d')  # Fecha seleccionada
 
     if request.method == 'POST':
         form = TurnoForm(request.POST)
         if form.is_valid():
             form.save()
-            # Redirigir al calendario después de guardar
+            messages.success(request, "Turno agendado correctamente.")
             return redirect('turnos:vista_calendario', year=year, month=month)
+        else:
+            for error in form.errors.values():
+                messages.error(request, error)
     else:
-        # Establecer la fecha inicial del formulario
         form = TurnoForm(initial={'fecha': fecha_inicial})
 
+    pacientes = Paciente.objects.all()
     return render(request, 'turnos/agregar_turno.html', {
         'form': form,
-        'pacientes': pacientes,  # Pasar pacientes al contexto
+        'pacientes': pacientes,
+        'fecha_hoy': fecha_hoy,
+        'fecha_inicial': fecha_inicial,
         'year': year,
         'month': month,
-        'day': day,  # Incluye el día en el contexto
+        'day': day,
     })
 
 

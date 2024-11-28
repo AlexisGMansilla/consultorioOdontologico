@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Turno</title>
     <!-- Estilos de Flatpickr -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -9,6 +11,15 @@
 <body>
     <div class="container">
         <h1>Agregar Turno</h1>
+        <!-- Mostrar mensajes de error -->
+        {% if messages %}
+        <div>
+            {% for message in messages %}
+            <p style="color: red;">{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
         <form method="post">
             {% csrf_token %}
             <label for="paciente">Paciente:</label>
@@ -17,8 +28,6 @@
                 <option value="{{ paciente.id }}">{{ paciente.nombre }} {{ paciente.apellido }}</option>
                 {% endfor %}
             </select>
-            
-            
         
             <label for="fecha">Fecha:</label>
             <input type="date" name="fecha" id="fecha" value="{{ fecha_inicial }}" required>
@@ -31,27 +40,91 @@
         
             <button type="submit">Guardar</button>
         </form>
+        
+        <!-- Enlace para volver al calendario -->
         <a href="{% url 'turnos:vista_calendario' year=year month=month %}" class="link-back">Volver al calendario</a>
+    </div>
+
+    <!-- Modal para mostrar turnos -->
+    <div id="turnosModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
+        <div style="background:white; margin:10% auto; padding:20px; width:50%; border-radius:10px;">
+            <h2>Turnos del día</h2>
+            <div id="contenidoModal"></div>
+            <button onclick="cerrarModal()">Cerrar</button>
+        </div>
     </div>
 
     <!-- Scripts -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar Flatpickr para el campo de fecha
+        document.addEventListener('DOMContentLoaded', function () {
+            const today = new Date(); // Fecha de hoy en formato JS
+
+            // Configuración de Flatpickr para fecha mínima
             flatpickr("[name='fecha']", {
-                enableTime: false,       // Solo seleccionar fecha
-                dateFormat: "Y-m-d",     // Formato compatible con Django
-                defaultDate: "{{ turno.fecha|date:'Y-m-d' }}",  // Fecha actual del turno como predeterminada
+                minDate: today, // Evita seleccionar días pasados
+                dateFormat: "Y-m-d",
             });
 
-            // Inicializar Flatpickr para el campo de hora (si existe)
+            // Configuración de Flatpickr para hora con restricciones
             flatpickr("[name='hora']", {
                 enableTime: true,
                 noCalendar: true,
                 dateFormat: "H:i",
                 time_24hr: true,
-                defaultDate: "{{ turno.hora|date:'H:i' }}",  // Hora actual como predeterminada
+                minuteIncrement: 30, // Intervalos de 30 minutos
+                disable: [
+                    function (date) {
+                        const hour = date.getHours();
+                        const minute = date.getMinutes();
+                        // Bloquear horarios fuera de 8:00-12:00 y 15:00-20:00
+                        return (
+                            (hour < 8 || (hour >= 12 && hour < 15) || hour >= 20) ||
+                            (hour === 12 && minute > 0) ||
+                            (hour === 15 && minute < 0)
+                        );
+                    },
+                ],
             });
+
+            function abrirModal(dia, turnos, puedeAgregarTurno) {
+                const modal = document.getElementById('turnosModal');
+                const contenido = document.getElementById('contenidoModal');
+
+                // Limpiar contenido
+                contenido.innerHTML = '';
+
+                // Mostrar turnos existentes
+                if (turnos.length === 0) {
+                    contenido.innerHTML = '<p>No hay turnos para este día.</p>';
+                } else {
+                    const lista = document.createElement('ul');
+                    turnos.forEach(turno => {
+                        const item = document.createElement('li');
+                        item.innerHTML = `${turno.paciente}: ${turno.hora} - ${turno.motivo}`;
+                        lista.appendChild(item);
+                    });
+                    contenido.appendChild(lista);
+                }
+
+                // Mostrar botón para agregar turno si está permitido
+                if (puedeAgregarTurno) {
+                    const botonAgregar = document.createElement('button');
+                    botonAgregar.textContent = 'Agregar Turno';
+                    botonAgregar.onclick = () => {
+                        window.location.href = `/turnos/agregar/${dia.year}/${dia.month}/${dia.day}/`;
+                    };
+                    contenido.appendChild(botonAgregar);
+                } else {
+                    contenido.innerHTML += '<p style="color: red;">No se pueden agregar turnos en días anteriores.</p>';
+                }
+
+                modal.style.display = 'block';
+            }
+
+            function cerrarModal() {
+                const modal = document.getElementById('turnosModal');
+                modal.style.display = 'none';
+            }
         });
     </script>
 </body>

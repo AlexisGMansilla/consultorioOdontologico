@@ -91,7 +91,6 @@
     <h1>Calendario: {{ nombre_mes }} {{ year }}</h1>
     <a href="{% url 'turnos:vista_calendario' year=year_anterior month=mes_anterior %}">Mes Anterior</a> |
     <a href="{% url 'turnos:vista_calendario' year=year_siguiente month=mes_siguiente %}">Mes Siguiente</a>
-    <a href="{% url 'turnos:vista_calendario' year=year month=month %}">Volver al Calendario</a>
     <table>
         <tr>
             <th>Lun</th>
