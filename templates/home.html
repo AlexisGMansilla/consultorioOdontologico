@@ -4,12 +4,84 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 {% endblock %}
+
 {% block content %}
 <div>
-    <h1>Bienvenido al Consultorio Odontológico</h1>
-    <p>Esta es la página principal del sistema.</p>
+    <h2 class="mt-3">Bienvenido al Consultorio Odontológico</h2>
 </div>
+
+{% if turnos_hoy %}
+<div class="container">
+    <h2>Turnos para Hoy</h2>
+    <table id="tablaTurnosHoy" class="display">
+        <thead>
+            <tr>
+                <th>Hora</th>
+                <th>Paciente</th>
+                <th>Motivo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for turno in turnos_hoy %}
+            <tr>
+                <td>{{ turno.hora }}</td>
+                <td>{{ turno.paciente }}</td>
+                <td>{{ turno.motivo }}</td>
+                <td>
+                    <button class="btn btn-primary" onclick="editarTurno({{ turno.id }})">Editar</button>
+                    <button class="btn btn-danger" onclick="eliminarTurno({{ turno.id }})">Eliminar</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
 {% endblock %}
+
 {% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#tablaTurnosHoy').DataTable({
+            language: {
+                processing: "Procesando...",
+                search: "Buscar:",
+                lengthMenu: "Mostrar _MENU_ turnos",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ turnos",
+                infoEmpty: "Mostrando 0 a 0 de 0 turnos",
+                infoFiltered: "(filtrado de _MAX_ turnos totales)",
+                loadingRecords: "Cargando...",
+                zeroRecords: "No se encontraron turnos coincidentes",
+                emptyTable: "No hay datos disponibles en la tabla",
+                paginate: {
+                    first: "Primero",
+                    previous: "Anterior",
+                    next: "Siguiente",
+                    last: "Último"
+                },
+                aria: {
+                    sortAscending: ": activar para ordenar la columna ascendente",
+                    sortDescending: ": activar para ordenar la columna descendente"
+                }
+            },
+            pageLength: 5,
+            lengthMenu: [5, 10, 25, 50],
+        });
+    });
+
+    function editarTurno(turnoId) {
+        window.location.href = `/turnos/editar/${turnoId}/`;
+    }
+
+    function eliminarTurno(turnoId) {
+        if (confirm("¿Estás seguro de que deseas eliminar este turno?")) {
+            window.location.href = `/turnos/eliminar/${turnoId}/`;
+        }
+    }
+</script>
 {% endblock %}
