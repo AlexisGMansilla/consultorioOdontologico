@@ -6,7 +6,6 @@ from django.shortcuts import render
 from django.contrib import messages
 
 
-
 def lista_utensilios(request):
     utensilios = Utensilio.objects.all()  # Obtén todos los utensilios
     return render(request, 'inventario/lista_utensilios.html', {'utensilios': utensilios})

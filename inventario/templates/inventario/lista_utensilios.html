@@ -1,128 +1,95 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventario</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/inventario.css' %}">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <!-- Librerías para Chart.js y generación de PDF -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Inventario{% endblock %}
 
-    
-</head>
-<body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Pacientes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Turnos</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#">Inventario</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Agregar Obra Social</a>
-                </li>
-                {% if user.is_authenticated %}
-                <li class="nav-item nav-form">
-                    <form action="#" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="nav-link btn btn-link">Cerrar Sesión</button>
-                    </form>
-                </li>
-                {% endif %}
-            </ul>
-        </div>
-    </nav>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/inventario.css' %}">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+{% endblock %}
 
-    <div class="container">
-        <h2>Inventario</h2>
-        <!-- Botón para agregar utensilio -->
-        <div class="button-container" style="display: flex; gap: 0.5rem;">
+{% block content %}
+<div class="container">
+    <h2 class="text-primary-custom">Inventario</h2>
+
+    <!-- Botón para agregar utensilio -->
+    <div class="button-container" style="display: flex; gap: 1rem; margin-bottom: 10px;">
         <button class="btn btn-success" onclick="openAddModal()">Agregar Utensilio</button>
         <button class="btn btn-success" onclick="openUsageModal()">Ver Utensilios Más Usados</button>
     </div>
-        <div id="usageModal" class="modal" style="display: none;">
-            <div class="modal-content" style="width: 90%; max-width: 800px;">
-                <h2>Utensilios Más Usados</h2>
-                <button id="downloadExcel" class="btn btn-success">Descargar Excel</button>
-                <canvas id="usageChart" style="max-width: 100%;"></canvas>
-                <button class="btn btn-secondary" onclick="closeUsageModal()">Cerrar</button>
-            </div>
-        </div>
 
-        <!-- Contenedor principal de tabla y referencias -->
-        <div class="main-content" style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <!-- Tabla de inventario -->
-            <div class="table-container" style="width: 70%;">
-                <table id="inventoryTable" class="inventory-table" style="width: 100%;">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Cantidad</th>
-                            <th>Opciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for utensilio in utensilios %}
-                        <tr>
-                            <td>{{ utensilio.nombre }}</td>
-                            <td class="quantity 
-                                {% if utensilio.cantidad < 5 %}low-stock
-                                {% elif utensilio.cantidad < 10 %}medium-stock
-                                {% else %}high-stock
-                                {% endif %}
-                            ">
-                                {{ utensilio.cantidad }}
-                            </td>
-                            <td class="button-options">
-                                <button class="btn btn-warning" onclick="openEditModal({{ utensilio.id }}, '{{ utensilio.nombre|escapejs }}', {{ utensilio.cantidad }})">Editar</button>
-                                <button class="btn btn-danger" onclick="openDeleteModal({{ utensilio.id }})">Eliminar</button>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Tabla de referencias de stock a la derecha -->
-            <div class="stock-reference" style="width: 25%; margin-left: 1rem;">
-                <h3>Referencias de Stock</h3>
-                <table class="reference-table">
-                    <thead>
-                        <tr>
-                            <th>Nivel de Stock</th>
-                            <th>Color</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Menos de 5</td>
-                            <td style="background-color: #F28B82; color: #fff; text-align: center;">Rojo</td>
-                        </tr>
-                        <tr>
-                            <td>Menos de 10</td>
-                            <td style="background-color: #FDD835; color: #333; text-align: center;">Amarillo</td>
-                        </tr>
-                        <tr>
-                            <td>10 o más</td>
-                            <td style="background-color: #81C995; color: #fff; text-align: center;">Verde</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+    <!-- Modal de Utensilios Más Usados -->
+    <div id="usageModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>Utensilios Más Usados</h2>
+            <canvas id="usageChart"></canvas>
+            <button id="downloadExcel" class="btn btn-success">Descargar Excel</button>
+            <button class="btn btn-secondary" onclick="closeUsageModal()">Cerrar</button>
         </div>
     </div>
 
-    <!-- Modal para agregar utensilio -->
-    <div id="addModal" class="modal" style="display: none;">
+    <div class="main-content">
+        <!-- Tabla de inventario -->
+        <div class="table-container">
+            <table id="inventoryTable" class="inventory-table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Cantidad</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for utensilio in utensilios %}
+                    <tr>
+                        <td>{{ utensilio.nombre }}</td>
+                        <td class="
+                            {% if utensilio.cantidad < 5 %}low-stock
+                            {% elif utensilio.cantidad < 10 %}medium-stock
+                            {% else %}high-stock
+                            {% endif %}
+                        ">{{ utensilio.cantidad }}</td>
+                        <td>
+                            <button class="btn btn-warning"
+                                onclick="openEditModal({{ utensilio.id }}, '{{ utensilio.nombre|escapejs }}', {{ utensilio.cantidad }})">Editar</button>
+                            <button class="btn btn-danger"
+                                onclick="openDeleteModal({{ utensilio.id }})">Eliminar</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Referencias de stock -->
+        <div class="stock-reference">
+            <h2 class="text-primary-custom">Referencias de Stock</h2>
+            <table class="reference-table">
+                <thead>
+                    <tr>
+                        <th>Nivel de Stock</th>
+                        <th>Color</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Menos de 5</td>
+                        <td style="background-color: #F28B82; color: #fff;">Rojo</td>
+                    </tr>
+                    <tr>
+                        <td>Menos de 10</td>
+                        <td style="background-color: #FDD835; color: #333;">Amarillo</td>
+                    </tr>
+                    <tr>
+                        <td>10 o más</td>
+                        <td style="background-color: #81C995; color: #fff;">Verde</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal de agregar utensilio -->
+    <div id="addModal" class="modal">
         <div class="modal-content">
             <h2>Agregar Utensilio</h2>
             <form id="addForm" action="{% url 'inventario:agregar_utensilio' %}" method="post">
@@ -144,7 +111,7 @@
     </div>
 
     <!-- Modal de confirmación de eliminación -->
-    <div id="deleteModal" class="modal" style="display: none;">
+    <div id="deleteModal" class="modal">
         <div class="modal-content">
             <h2>¿Estás seguro?</h2>
             <p>¿Deseas eliminar este utensilio?</p>
@@ -156,7 +123,7 @@
     </div>
 
     <!-- Modal de edición -->
-    <div id="editModal" class="modal" style="display: none;">
+    <div id="editModal" class="modal">
         <div class="modal-content">
             <h2>Editar Utensilio</h2>
             <form id="editForm" action="" method="post">
@@ -168,67 +135,73 @@
                 </div>
                 <div class="form-group">
                     <label for="editCantidad">Cantidad</label>
-                    <input type="number" id="editCantidad" name="cantidad" min="0" required oninput="updateDifference()">
+                    <input type="number" id="editCantidad" name="cantidad" min="0" required
+                        oninput="updateDifference()">
                     <small id="differenceMessage" style="color: red; display: none;"></small>
                 </div>
                 <button type="submit" class="btn btn-primary">Guardar Cambios</button>
             </form>
         </div>
     </div>
+</div>
+{% endblock %}
 
-    <!-- DataTables Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#inventoryTable').DataTable({
-                language: {
-                    processing: "Procesando...",
-                    search: "Buscar:",
-                    lengthMenu: "Mostrar _MENU_ Utensilios",
-                    info: "Mostrando _START_ a _END_ de _TOTAL_ Utensilios",
-                    infoEmpty: "Mostrando 0 a 0 de 0 Utensilios",
-                    infoFiltered: "(filtrado de _MAX_ Utensilios totales)",
-                    loadingRecords: "Cargando...",
-                    zeroRecords: "No se encontraron Utensilios coincidentes",
-                    emptyTable: "No hay datos disponibles en la tabla",
-                    paginate: {
-                        first: "Primero",
-                        previous: "Anterior",
-                        next: "Siguiente",
-                        last: "Último"
-                    },
-                    aria: {
-                        sortAscending: ": activar para ordenar la columna ascendente",
-                        sortDescending: ": activar para ordenar la columna descendente"
-                    }
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $('#inventoryTable').DataTable({
+            language: {
+                processing: "Procesando...",
+                search: "Buscar:",
+                lengthMenu: "Mostrar _MENU_ Utensilios",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ Utensilios",
+                infoEmpty: "Mostrando 0 a 0 de 0 Utensilios",
+                infoFiltered: "(filtrado de _MAX_ Utensilios totales)",
+                loadingRecords: "Cargando...",
+                zeroRecords: "No se encontraron Utensilios coincidentes",
+                emptyTable: "No hay datos disponibles en la tabla",
+                paginate: {
+                    first: "Primero",
+                    previous: "Anterior",
+                    next: "Siguiente",
+                    last: "Último"
                 },
-                pageLength: 5,
-                lengthMenu: [5, 10, 25, 50],
-            });
+                aria: {
+                    sortAscending: ": activar para ordenar la columna ascendente",
+                    sortDescending: ": activar para ordenar la columna descendente"
+                }
+            },
+            pageLength: 5,
+            lengthMenu: [5, 10, 25, 50],
         });
 
         let deleteId = null;
+        let usageChartInstance = null;
 
-        function openAddModal() {
+        window.openAddModal = function () {
             document.getElementById('addModal').style.display = 'flex';
-        }
+        };
 
-        function closeAddModal() {
+        window.closeAddModal = function () {
             document.getElementById('addModal').style.display = 'none';
-        }
+        };
 
-        function openDeleteModal(id) {
+        window.openDeleteModal = function (id) {
             deleteId = id;
             document.getElementById('deleteModal').style.display = 'flex';
-        }
+        };
 
-        function closeDeleteModal() {
+        window.closeDeleteModal = function () {
             document.getElementById('deleteModal').style.display = 'none';
             deleteId = null;
-        }
+        };
 
-        function confirmDelete() {
+        window.confirmDelete = function () {
             if (deleteId) {
                 const url = `/inventario/eliminar_utensilio/${deleteId}/`;
                 fetch(url, {
@@ -246,9 +219,9 @@
                     console.error('Error:', error);
                 });
             }
-        }
+        };
 
-        function openEditModal(id, nombre, cantidad) {
+        window.openEditModal = function (id, nombre, cantidad) {
             document.getElementById('editId').value = id;
             document.getElementById('editNombre').value = nombre;
             document.getElementById('editCantidad').value = cantidad;
@@ -257,95 +230,85 @@
             editForm.action = `/inventario/editar/${id}/`;
 
             document.getElementById('editModal').style.display = 'flex';
-        }
+        };
 
-        function closeEditModal() {
+        window.closeEditModal = function () {
             document.getElementById('editModal').style.display = 'none';
-        }  
-    </script>
-    <script>
-function openUsageModal() {
-    const utensilios = [
-        {% for utensilio in utensilios %}
-        {
-            nombre: "{{ utensilio.nombre }}",
-            usos: {{ utensilio.usos }}
-        }{% if not forloop.last %},{% endif %}
-        {% endfor %}
-    ];
+        };
 
-    const nombres = utensilios.map(u => u.nombre);
-    const usos = utensilios.map(u => u.usos);
+        window.openUsageModal = function () {
+            const utensilios = [
+                {% for utensilio in utensilios %}
+                {
+                    nombre: "{{ utensilio.nombre }}",
+                    usos: {{ utensilio.usos }}
+                }{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ];
 
-    const ctx = document.getElementById('usageChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: nombres,
-            datasets: [{
-                label: 'Usos',
-                data: usos,
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: { beginAtZero: true }
+            const nombres = utensilios.map(u => u.nombre);
+            const usos = utensilios.map(u => u.usos);
+
+            const ctx = document.getElementById('usageChart').getContext('2d');
+
+            if (usageChartInstance) {
+                usageChartInstance.destroy();
             }
+
+            usageChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: nombres,
+                    datasets: [{
+                        label: 'Usos',
+                        data: usos,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            document.getElementById('usageModal').style.display = 'flex';
+        };
+
+        window.closeUsageModal = function () {
+            document.getElementById('usageModal').style.display = 'none';
+        };
+        const rows = document.querySelectorAll('#inventoryTable tbody tr');
+    rows.forEach(row => {
+        const cantidadCell = row.querySelector('td:nth-child(2)'); // Segunda columna (Cantidad)
+        const cantidad = parseInt(cantidadCell.textContent);
+
+        // Remover clases existentes y aplicar nuevas
+        cantidadCell.classList.remove('low-stock', 'medium-stock', 'high-stock');
+
+        if (cantidad < 5) {
+            cantidadCell.classList.add('low-stock');
+        } else if (cantidad < 10) {
+            cantidadCell.classList.add('medium-stock');
+        } else {
+            cantidadCell.classList.add('high-stock');
         }
     });
+        document.getElementById("downloadExcel").addEventListener("click", function () {
+            const utensilios = [
+                {% for utensilio in utensilios %}
+                { Nombre: "{{ utensilio.nombre }}", Usos: {{ utensilio.usos }} },
+                {% endfor %}
+            ];
 
-    document.getElementById('usageModal').style.display = 'flex';
-}
-
-function closeUsageModal() {
-    document.getElementById('usageModal').style.display = 'none';
-}
-function updateDifference() {
-    const originalCantidad = parseInt(document.getElementById('editCantidad').dataset.originalCantidad);
-    const newCantidad = parseInt(document.getElementById('editCantidad').value) || 0;
-    const difference = originalCantidad - newCantidad;
-
-    const messageElement = document.getElementById('differenceMessage');
-    if (difference > 0) {
-        messageElement.textContent = `Has disminuido ${difference} unidades.`;
-        messageElement.style.display = 'block';
-    } else {
-        messageElement.style.display = 'none';
-    }
-}
-
-function openEditModal(id, nombre, cantidad) {
-    document.getElementById('editId').value = id;
-    document.getElementById('editNombre').value = nombre;
-    const editCantidadInput = document.getElementById('editCantidad');
-    editCantidadInput.value = cantidad;
-    editCantidadInput.dataset.originalCantidad = cantidad; // Guardar cantidad original
-
-    const editForm = document.getElementById('editForm');
-    editForm.action = `/inventario/editar/${id}/`;
-
-    document.getElementById('editModal').style.display = 'flex';
-}
-
-
-document.getElementById("downloadExcel").addEventListener("click", function () {
-    const utensilios = [
-        {% for utensilio in utensilios %}
-        { Nombre: "{{ utensilio.nombre }}", Usos: {{ utensilio.usos }} },
-        {% endfor %}
-    ];
-
-    const worksheet = XLSX.utils.json_to_sheet(utensilios);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Utensilios Más Usados");
-    XLSX.writeFile(workbook, "utensilios_mas_usados.xlsx");
-});
-
-
+            const worksheet = XLSX.utils.json_to_sheet(utensilios);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Utensilios Más Usados");
+            XLSX.writeFile(workbook, "utensilios_mas_usados.xlsx");
+        });
+    });
 </script>
-</body>
-</html>
+{% endblock %}

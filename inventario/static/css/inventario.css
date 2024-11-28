@@ -10,56 +10,28 @@
     --amarillo-intenso: #FDD835;
     --verde-intenso: #81C995;
 }
-
-/* Fondo principal */
-body {
-    background-color: var(--fondo-claro);
-    font-family: Arial, sans-serif;
-    color: #333;
-    margin: 0;
-    padding: 0;
+/* Niveles de stock */
+.low-stock {
+    background-color: #F28B82; /* Rojo */
+    color: #fff; /* Texto blanco */
 }
 
-/* Navbar */
-.navbar {
-    background-color: var(--verde-suave);
-    padding: 1rem;
+.medium-stock {
+    background-color: #FDD835; /* Amarillo */
+    color: #333; /* Texto negro */
 }
 
-.navbar-brand {
-    color: var(--azul-logo) !important;
-    font-weight: bold;
-    font-size: 1.5rem;
-}
-
-.navbar-collapse {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.navbar-nav {
-    display: flex;
-    gap: 1rem;
-}
-
-.nav-link {
-    color: var(--azul-logo) !important;
-    font-weight: bold;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.nav-link:hover {
-    background-color: var(--verde-claro);
-    border-radius: 4px;
-    color: #333 !important;
-    padding: 0.5rem 1rem;
+.high-stock {
+    background-color: #81C995; /* Verde */
+    color: #fff; /* Texto blanco */
 }
 
 /* Título principal */
-h2 {
+h2.text-primary-custom {
     color: var(--azul-logo);
     font-weight: bold;
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
 /* Contenedor principal */
@@ -67,15 +39,14 @@ h2 {
     padding: 2rem;
     background-color: var(--fondo-claro);
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 800px;
+    min-width: 1000px;
+    width: 100%;
     margin: 0 auto;
 }
 
-/* Botón general */
+/* Botones */
 .btn {
     padding: 0.5rem 1rem;
-    margin: 0 0.25rem;
     border: none;
     cursor: pointer;
     border-radius: 8px;
@@ -89,7 +60,7 @@ h2 {
 }
 
 .btn-success:hover {
-    background-color: #00264d; /* Azul más oscuro */
+    background-color: #00264d;
 }
 
 .btn-warning {
@@ -107,19 +78,18 @@ h2 {
 }
 
 .btn-danger:hover {
-    background-color: #E57373; /* Rojo más oscuro */
+    background-color: #E57373;
 }
 
 /* Tabla */
 .inventory-table {
-    width: 80%;
-    max-width: 800px;
+    width: 100%;
     border-collapse: collapse;
-    margin: 0 auto;
+    margin: 2rem 0;
 }
 
 .inventory-table th, .inventory-table td {
-    padding: 0.75rem;
+    padding: 1rem;
     text-align: center;
     border: 1px solid #ddd;
 }
@@ -129,7 +99,7 @@ h2 {
     color: var(--azul-logo);
 }
 
-/* Campos de cantidad */
+/* Cantidades */
 .quantity.low-stock {
     background-color: var(--rojo);
     color: white;
@@ -148,6 +118,29 @@ h2 {
     border-radius: 4px;
 }
 
+/* Referencias de stock */
+.stock-reference {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.reference-table {
+    width: 80%;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+.reference-table th, .reference-table td {
+    padding: 0.5rem;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.reference-table th {
+    background-color: var(--verde-claro);
+    color: var(--azul-logo);
+}
+
 /* Modales */
 .modal {
     position: fixed;
@@ -157,7 +150,7 @@ h2 {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 1000;
@@ -167,131 +160,68 @@ h2 {
     background-color: var(--fondo-claro);
     padding: 2rem;
     border-radius: 10px;
-    width: 800px; /* Mismo tamaño que el formulario */
+    width: 600px;
     max-width: 90%;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: left;
-}
-
-.modal-content h2 {
-    color: var(--azul-logo);
     text-align: center;
-    margin-bottom: 2rem;
-    font-size: 1.8rem;
 }
 
 /* Formulario en modales */
-.modal-content form {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-}
-
-.modal-content form .full-width {
-    grid-column: span 2;
-}
-
 .modal-content form label {
     font-weight: bold;
     color: var(--azul-logo);
-    margin-bottom: 0.5rem;
 }
 
-.modal-content form input,
-.modal-content form select,
+.modal-content form input, 
+.modal-content form select, 
 .modal-content form textarea {
     width: 100%;
-    padding: 0.8rem;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
     border: 1px solid var(--verde-agua);
     border-radius: 5px;
     font-size: 1rem;
-    color: #333;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
 }
 
-.modal-content .btn-primary {
-    grid-column: span 2;
-    background-color: var(--azul-logo);
-    color: white;
-    font-weight: bold;
-    padding: 0.8rem 1.5rem;
-    border-radius: 8px;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease, transform 0.2s ease;
+.modal-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1rem;
 }
 
-.modal-content .btn-primary:hover {
-    background-color: #00264d;
-    transform: translateY(-2px);
+/* DataTables */
+.dataTables_wrapper .dataTables_filter input {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
 }
 
-/* Referencias */
-.reference-table {
-    width: 60%;
-    margin: 1rem auto;
-    border-collapse: collapse;
+.dataTables_wrapper .dataTables_length select {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
 }
 
-.reference-table th {
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 6px 12px;
+    margin: 2px;
+    border-radius: 4px;
     background-color: var(--verde-claro);
     color: var(--azul-logo);
-    font-weight: bold;
 }
 
-.reference-table td {
-    border: 1px solid #ddd;
-    padding: 0.5rem;
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background-color: var(--verde-suave);
 }
 
-/*DATATABLES*/
-        /* Personalización de DataTables para que se adapte a tu diseño */
-        .dataTables_wrapper .dataTables_filter input {
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 5px;
-            font-size: 0.9rem;
-        }
-
-        .dataTables_wrapper .dataTables_length select {
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 5px;
-            font-size: 0.9rem;
-        }
-
-        .dataTables_wrapper .dataTables_paginate .paginate_button {
-            padding: 6px 12px;
-            margin: 2px;
-            border-radius: 4px;
-            background-color: var(--verde-claro);
-            color: var(--azul-logo);
-            text-decoration: none;
-        }
-
-        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-            background-color: var(--verde-suave);
-        }
-
-        .dataTables_wrapper .dataTables_info {
-            margin-top: 10px;
-            font-size: 0.9rem;
-        }
-/* grafico de utensilios */
-        .btn-success {
-            background-color: #003366; /* Azul oscuro */
-            color: white;
-            padding: 0.5rem 1.5rem;
-            font-size: 1rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-right: 0.5rem; /* Espaciado entre botones */
-        }
-        
-        .btn-success:hover {
-            background-color: #00264d; /* Azul más oscuro al pasar el ratón */
-        }
+.dataTables_wrapper .dataTables_info {
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+.modal-content{
+    gap: 20px;
+}
+.modal-content canvas {
+    max-height: 400px;
+    max-width: 100%;
+}

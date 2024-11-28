@@ -30,7 +30,7 @@
                 <li><a href="{% url 'turnos:vista_calendario' %}">Turnos</a></li>
                 <li><a href="{% url 'pacientes:listado' %}">Pacientes</a></li>
                 <li><a href="{% url 'obra_sociales:listar_obras_sociales' %}">Obra Sociales</a></li>
-                <li><a href="">Inventario</a></li>
+                <li><a href="{% url 'inventario:lista_utensilios' %}">Inventario</a></li>
                 <li>
                     <form action="{% url 'login:logout' %}" method="post" class="logout-form">
                         {% csrf_token %}
