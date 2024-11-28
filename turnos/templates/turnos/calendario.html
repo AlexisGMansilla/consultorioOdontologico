@@ -2,7 +2,9 @@
 {% load static %}
 
 {% block title %}Turnos: {{ nombre_mes }} {{ year }}{% endblock %}
-
+{% block extra_meta %}
+<meta name="csrf-token" content="{{ csrf_token }}">
+{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'turnos/css/calendario.css' %}">
 {% endblock %}
@@ -12,8 +14,10 @@
     <div>
         <h2 class="mt-4 text-primary-custom">Calendario: {{ nombre_mes }} {{ year }}</h2>
         <nav class="navigation">
-            <a href="{% url 'turnos:vista_calendario' %}?year={{ year_anterior }}&month={{ mes_anterior }}">Mes anterior</a>
-            <a href="{% url 'turnos:vista_calendario' %}?year={{ year_siguiente }}&month={{ mes_siguiente }}">Mes siguiente</a>
+            <a href="{% url 'turnos:vista_calendario' %}?year={{ year_anterior }}&month={{ mes_anterior }}">Mes
+                anterior</a>
+            <a href="{% url 'turnos:vista_calendario' %}?year={{ year_siguiente }}&month={{ mes_siguiente }}">Mes
+                siguiente</a>
         </nav>
     </div>
     <table>
@@ -31,11 +35,10 @@
         <tbody>
             <tr>
                 {% for dia, turnos_dia in dias %}
-                    {% if dia is None %}
-                        <td class="vacio"></td>
-                    {% else %}
-                        <td class="{% if turnos_dia %}con-turnos{% endif %}"
-                            onclick="abrirModal({year: {{ year }}, month: {{ month }}, day: {{ dia }}}, [
+                {% if dia is None %}
+                <td class="vacio"></td>
+                {% else %}
+                <td class="{% if turnos_dia %}con-turnos{% endif %}" onclick="abrirModal({year: {{ year }}, month: {{ month }}, day: {{ dia }}}, [
                                 {% for turno in turnos_dia %}
                                     { 'id': {{ turno.id }},
                                       'paciente': '{{ turno.paciente }}',
@@ -43,13 +46,13 @@
                                       'motivo': '{{ turno.motivo }}' },
                                 {% endfor %}
                             ])">
-                            {{ dia }}
-                        </td>
-                    {% endif %}
-                    {% if forloop.counter|divisibleby:7 %}
+                    {{ dia }}
+                </td>
+                {% endif %}
+                {% if forloop.counter|divisibleby:7 %}
             </tr>
             <tr>
-                    {% endif %}
+                {% endif %}
                 {% endfor %}
             </tr>
         </tbody>
@@ -73,10 +76,10 @@
     <div class="modal-content">
         <!-- Botón para cerrar el modal -->
         <button class="btn-close" onclick="cerrarModal()"></button>
-        
+
         <!-- Título del modal -->
         <h2>Turnos del día</h2>
-        
+
         <!-- Contenido dinámico del modal -->
         <div id="contenidoModal">
             <ul>
@@ -129,7 +132,7 @@
         botonAgregar.textContent = 'Agregar Turno';
         botonAgregar.classList.add('btn-add'); // Asignar clase
         botonAgregar.id = 'botonAgregarTurno'; // Asignar ID
-        botonAgregar.onclick = function() {
+        botonAgregar.onclick = function () {
             window.location.href = `/turnos/agregar/${dia.year}/${dia.month}/${dia.day}/`;
         };
         contenido.appendChild(botonAgregar);

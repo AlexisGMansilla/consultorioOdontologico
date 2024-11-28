@@ -2,20 +2,22 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 class ObraSocial(models.Model):
-    nombre = models.CharField(max_length=20)
-    alcance = models.CharField(max_length=50, choices=[
-        ('Niños', 'Niños'),
-        ('Adolescentes', 'Adolescentes'),
-        ('Adultos', 'Adultos'),
-        ('Jubilados', 'Jubilados'),
-        ('Embarazadas', 'Embarazadas'),
-        ('Discapacidad', 'Personas con discapacidad'),
-    ])
-    cobertura = models.DecimalField(
-        max_digits=5,
-        decimal_places=2,
-        validators=[
-            MinValueValidator(0),
-            MaxValueValidator(100)  
+    nombre = models.CharField(max_length=20, unique=True)  # Evita duplicados en "nombre"
+    cobertura = models.CharField(
+        max_length=50,
+        choices=[
+            ('Familiar', 'Familiar'),
+            ('Parcial', 'Parcial'),
+            ('Total', 'Total'),
+            ('Individual', 'Individual'),
+            ('Duo', 'Duo'),
         ]
     )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['nombre'], name='unique_nombre'),
+        ]
+
+    def __str__(self):
+        return self.nombre

@@ -48,22 +48,75 @@
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Inicializar Flatpickr para el campo de fecha
+    document.addEventListener('DOMContentLoaded', function () {
+        const today = new Date(); // Fecha de hoy en formato JS
+
+        // Configuración de Flatpickr para fecha mínima
         flatpickr("[name='fecha']", {
-            enableTime: false,
+            minDate: today, // Evita seleccionar días pasados
             dateFormat: "Y-m-d",
-            defaultDate: "{{ turno.fecha|date:'Y-m-d' }}",
         });
 
-        // Inicializar Flatpickr para el campo de hora
+        // Configuración de Flatpickr para hora con restricciones
         flatpickr("[name='hora']", {
             enableTime: true,
             noCalendar: true,
             dateFormat: "H:i",
             time_24hr: true,
-            defaultDate: "{{ turno.hora|date:'H:i' }}",
+            minuteIncrement: 30, // Intervalos de 30 minutos
+            disable: [
+                function (date) {
+                    const hour = date.getHours();
+                    const minute = date.getMinutes();
+                    // Bloquear horarios fuera de 8:00-12:00 y 15:00-20:00
+                    return (
+                        (hour < 8 || (hour >= 12 && hour < 15) || hour >= 20) ||
+                        (hour === 12 && minute > 0) ||
+                        (hour === 15 && minute < 0)
+                    );
+                },
+            ],
         });
+
+        function abrirModal(dia, turnos, puedeAgregarTurno) {
+            const modal = document.getElementById('turnosModal');
+            const contenido = document.getElementById('contenidoModal');
+
+            // Limpiar contenido
+            contenido.innerHTML = '';
+
+            // Mostrar turnos existentes
+            if (turnos.length === 0) {
+                contenido.innerHTML = '<p>No hay turnos para este día.</p>';
+            } else {
+                const lista = document.createElement('ul');
+                turnos.forEach(turno => {
+                    const item = document.createElement('li');
+                    item.innerHTML = `${turno.paciente}: ${turno.hora} - ${turno.motivo}`;
+                    lista.appendChild(item);
+                });
+                contenido.appendChild(lista);
+            }
+
+            // Mostrar botón para agregar turno si está permitido
+            if (puedeAgregarTurno) {
+                const botonAgregar = document.createElement('button');
+                botonAgregar.textContent = 'Agregar Turno';
+                botonAgregar.onclick = () => {
+                    window.location.href = `/turnos/agregar/${dia.year}/${dia.month}/${dia.day}/`;
+                };
+                contenido.appendChild(botonAgregar);
+            } else {
+                contenido.innerHTML += '<p style="color: red;">No se pueden agregar turnos en días anteriores.</p>';
+            }
+
+            modal.style.display = 'block';
+        }
+
+        function cerrarModal() {
+            const modal = document.getElementById('turnosModal');
+            modal.style.display = 'none';
+        }
     });
 </script>
 {% endblock %}

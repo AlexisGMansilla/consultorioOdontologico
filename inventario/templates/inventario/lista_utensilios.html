@@ -7,8 +7,11 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/inventario.css' %}">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-        <!-- Chart.js -->
+    <!-- Librerías para Chart.js y generación de PDF -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    
 </head>
 <body>
     <!-- Navbar -->
@@ -46,10 +49,10 @@
         <button class="btn btn-success" onclick="openAddModal()">Agregar Utensilio</button>
         <button class="btn btn-success" onclick="openUsageModal()">Ver Utensilios Más Usados</button>
     </div>
-
         <div id="usageModal" class="modal" style="display: none;">
             <div class="modal-content" style="width: 90%; max-width: 800px;">
                 <h2>Utensilios Más Usados</h2>
+                <button id="downloadExcel" class="btn btn-success">Descargar Excel</button>
                 <canvas id="usageChart" style="max-width: 100%;"></canvas>
                 <button class="btn btn-secondary" onclick="closeUsageModal()">Cerrar</button>
             </div>
@@ -327,6 +330,22 @@ function openEditModal(id, nombre, cantidad) {
 
     document.getElementById('editModal').style.display = 'flex';
 }
+
+
+document.getElementById("downloadExcel").addEventListener("click", function () {
+    const utensilios = [
+        {% for utensilio in utensilios %}
+        { Nombre: "{{ utensilio.nombre }}", Usos: {{ utensilio.usos }} },
+        {% endfor %}
+    ];
+
+    const worksheet = XLSX.utils.json_to_sheet(utensilios);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Utensilios Más Usados");
+    XLSX.writeFile(workbook, "utensilios_mas_usados.xlsx");
+});
+
+
 </script>
 </body>
 </html>

@@ -41,7 +41,7 @@
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Inicializar Flatpickr para el campo de fecha
         flatpickr("[name='fecha']", {
             enableTime: false,
@@ -55,7 +55,8 @@
             noCalendar: true,
             dateFormat: "H:i",
             time_24hr: true,
-            defaultDate: "{{ turno.hora|date:'H:i' }}",
+            minuteIncrement: 30, // Intervalos de 30 minutos
+            defaultDate: "{{ turno.hora|date:'H:i' }}",  // Hora actual como predeterminada
         });
     });
 </script>

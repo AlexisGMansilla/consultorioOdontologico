@@ -4,7 +4,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Turno, Paciente
 from .forms import TurnoForm
 import locale  # Importamos locale para configuraciones de idioma
-
+from django.db.models import Count
+from datetime import date
+from django.contrib import messages
 
 def vista_calendario(request):
     # Establecer el idioma en español
@@ -66,7 +68,7 @@ def agregar_turno(request, year, month, day):
         form = TurnoForm(request.POST)
         if form.is_valid():
             form.save()
-            # Redirigir al calendario después de guardar
+            messages.success(request, "Turno agendado correctamente.")
             return redirect('turnos:vista_calendario')
     else:
         # Establecer la fecha inicial del formulario
@@ -104,4 +106,3 @@ def eliminar_turno(request, turno_id):
     year, month = turno.fecha.year, turno.fecha.month
     turno.delete()
     return redirect('turnos:vista_calendario')
-

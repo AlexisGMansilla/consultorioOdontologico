@@ -15,7 +15,7 @@
 
     <!-- Botón para agregar nueva obra social -->
     <div style="text-align: center; margin-bottom: 20px;">
-        <a href="{% url 'crear_obra_social' %}" class="btn btn-success">Agregar Obra Social</a>
+        <a href="{% url 'obra_sociales:crear_obra_social' %}" class="btn btn-success">Agregar Obra Social</a>
     </div>
 
     <!-- Contenedor de la tabla -->
@@ -24,8 +24,7 @@
             <thead>
                 <tr>
                     <th>Nombre</th>
-                    <th>Alcance</th>
-                    <th>Cobertura (%)</th>
+                    <th>Cobertura</th>
                     <th>Opciones</th>
                 </tr>
             </thead>
@@ -33,48 +32,22 @@
                 {% for obra in obras %}
                 <tr>
                     <td>{{ obra.nombre }}</td>
-                    <td>{{ obra.alcance }}</td>
                     <td>{{ obra.cobertura }}</td>
                     <td>
-                        <a href="{% url 'editar_obra_social' obra.pk %}" class="btn btn-warning btn-sm">Editar</a>
-                        <button onclick="eliminarObra({{ obra.id }})" class="btn btn-danger btn-sm">Eliminar</button>
+                        <a href="{% url 'obra_sociales:editar' obra.id %}" class="btn btn-warning">Editar</a>
+                        <!-- Botón de eliminar -->
+                        <button class="btn btn-danger btn-eliminar" data-id="{{ obra.id }}">Eliminar</button>
                     </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="4" style="text-align: center;">No hay datos disponibles</td>
                 </tr>
                 {% endfor %}
             </tbody>
-            
         </table>
     </div>
 
-    <!-- Scripts de DataTables -->
+    <!-- Scripts de DataTables y funcionalidad -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script>
-        // Función para eliminar una obra social
-        function eliminarObra(obraId) {
-            if (confirm('¿Estás seguro de eliminar esta obra social?')) {
-                fetch(`/obra_sociales/eliminar/${obraId}/`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token }}',
-                    }
-                })
-                .then(response => {
-                    if (response.ok) {
-                        alert('Obra social eliminada correctamente.');
-                        location.reload();
-                    } else {
-                        alert('Ocurrió un error al intentar eliminar la obra social.');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-            }
-        }
-
         // Inicialización de DataTables con configuración en español
         $(document).ready(function () {
             $('#tabla-obras').DataTable({
@@ -99,6 +72,31 @@
                         "sortAscending": ": activar para ordenar la columna de manera ascendente",
                         "sortDescending": ": activar para ordenar la columna de manera descendente"
                     }
+                }
+            });
+
+            // Funcionalidad para eliminar una obra social
+            $('.btn-eliminar').on('click', function () {
+                const obraId = $(this).data('id'); // Obtiene el ID de la obra social
+                const csrfToken = '{{ csrf_token }}'; // Token CSRF
+
+                if (confirm('¿Estás seguro de eliminar esta obra social?')) {
+                    fetch(`/obra_sociales/eliminar/${obraId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken, // Incluye el token CSRF
+                        },
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Obra social eliminada correctamente.');
+                            location.reload(); // Recarga la página tras la eliminación
+                        } else {
+                            alert('Ocurrió un error al intentar eliminar la obra social.');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
                 }
             });
         });

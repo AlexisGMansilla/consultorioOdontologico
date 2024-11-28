@@ -11,7 +11,8 @@
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-primary">Guardar</button>
-        <a href="{% url 'listar_obras_sociales' %}" class="btn btn-secondary">Cancelar</a>
+        <a href="{% url 'obra_sociales:listar_obras_sociales' %}" class="btn btn-secondary">Cancelar</a>
+
     </form>
 </body>
 </html>

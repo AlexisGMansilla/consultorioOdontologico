@@ -1,5 +1,6 @@
 from django import forms
 from .models import Turno
+from datetime import datetime, date, time
 
 class TurnoForm(forms.ModelForm):
     class Meta:
@@ -11,12 +12,21 @@ class TurnoForm(forms.ModelForm):
             'hora': forms.TimeInput(attrs={'type': 'time', 'class': 'form-control'}),
             'motivo': forms.Textarea(attrs={'class': 'form-control'}),
         }
+
     def clean(self):
         cleaned_data = super().clean()
-        fecha = cleaned_data.get('fecha')
         hora = cleaned_data.get('hora')
+        fecha = cleaned_data.get('fecha')
 
-        if Turno.objects.filter(fecha=fecha, hora=hora).exclude(pk=self.instance.pk).exists():
-            raise forms.ValidationError('Ya existe un turno asignado para esta fecha y hora.')
+        # Validación de franjas horarias
+        if hora < time(8, 0) or (hora > time(12, 0) and hora < time(15, 0)) or hora > time(20, 0):
+            raise forms.ValidationError(
+                "El horario permitido es de 8:00 a 12:00 y de 15:00 a 20:00."
+            )
+
+        # Validación para no permitir fechas pasadas
+        if fecha and fecha < date.today():
+            raise forms.ValidationError("No se pueden asignar turnos en fechas pasadas.")
+
 
         return cleaned_data

@@ -12,13 +12,6 @@
 <div class="container my-4">
     <h2 class="mb-4 text-primary-custom">Historia Clínica de {{ paciente.nombre }} {{ paciente.apellido }}</h2>
 
-    {% if messages %}
-        <div class="alert alert-info">
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
-        </div>
-    {% endif %}
 
     <form method="post">
         {% csrf_token %}
