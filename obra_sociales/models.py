@@ -1,5 +1,4 @@
 from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
 
 class ObraSocial(models.Model):
     nombre = models.CharField(max_length=20, unique=True)  # Evita duplicados en "nombre"

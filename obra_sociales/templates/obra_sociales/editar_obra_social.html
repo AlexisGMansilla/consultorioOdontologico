@@ -1,15 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Editar Obra Social</title>
-</head>
-<body>
-    <h1>Editar Obra Social</h1>
-    <form method="post">
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar Obra Social{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/editar_obra_social.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Editar Obra Social</h2>
+    <form method="post" class="form-obra-social">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Guardar Cambios</button>
+        <div class="row">
+            <div class="col-12">
+                <label for="id_nombre">Nombre:</label>
+                {{ form.nombre }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <label for="id_cobertura">Cobertura:</label>
+                {{ form.cobertura }}
+            </div>
+        </div>
+        <div class="row botones-form">
+            <button type="submit" class="btn-primary">Guardar Cambios</button>
+            <a href="{% url 'obra_sociales:listar_obras_sociales' %}" class="btn-secondary">Cancelar</a>
+        </div>
     </form>
-</body>
-</html>
+</div>
+{% endblock %}

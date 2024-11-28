@@ -8,6 +8,7 @@ class ObraSocialForm(forms.ModelForm):
 
     def clean_nombre(self):
         nombre = self.cleaned_data.get('nombre')
-        if ObraSocial.objects.filter(nombre=nombre).exists():
+        # Excluir la instancia actual si está en edición
+        if ObraSocial.objects.filter(nombre=nombre).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError('El nombre ya está registrado.')
         return nombre

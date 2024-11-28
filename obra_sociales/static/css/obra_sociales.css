@@ -1,58 +1,239 @@
-/* Contenedor centrado para la tabla */
-.tabla-container {
-    display: flex;
+/* Variables de colores personalizados */
+:root {
+    --fondo-claro: #F5F5F5;
+    --amarillo-suave: #F7EF81;
+    --verde-claro: #CFE795;
+    --verde-suave: #A7D3A6;
+    --verde-agua: #ADD2C2;
+    --azul-logo: #003366;
+    --texto-oscuro: #333333;
+    --sombra-suave: rgba(0, 0, 0, 0.1);
+}
+
+/* Contenedor principal de obras sociales */
+.obras-sociales-container {
+    padding: 2rem;
+    background-color: var(--fondo-claro);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px var(--sombra-suave);
+}
+
+/* Título principal */
+.text-primary-custom {
+    color: var(--azul-logo);
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+/* Botón de agregar obra social */
+.boton-agregar-container {
+    text-align: start;
+    margin-bottom: 1.5rem;
+}
+
+.btn-agregar-obra {
+    background-color: var(--azul-logo);
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-block;
+}
+
+.btn-agregar-obra:hover {
+    background-color: #00264d;
+    transform: translateY(-2px);
+}
+
+.btn-agregar-obra:active {
+    background-color: #001f3d;
+    transform: translateY(0);
+}
+
+/* Contenedor de la tabla */
+.tabla-obras-container {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 1rem;
+    border-radius: 10px;
+}
+
+/* Tabla de obras sociales */
+.tabla-obras {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 2px 4px var(--sombra-suave);
+    background-color: #fff;
+}
+
+.tabla-obras thead th {
+    background-color: var(--verde-claro);
+    color: var(--azul-logo);
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 2px solid var(--verde-agua);
+}
+
+
+.tabla-obras td, .tabla-obras th {
+    padding: 1rem;
+    border: 1px solid var(--sombra-suave);
+    text-align: left;
+    vertical-align: middle;
+}
+
+/* Botones de acciones en las opciones */
+.btn-editar {
+    background-color: var(--amarillo-suave);
+    color: var(--texto-oscuro);
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    border: none;
+    display: inline-block;
+}
+
+.btn-editar:hover {
+    background-color: var(--verde-claro);
+    color: #000;
+}
+
+.btn-eliminar {
+    background-color: #ff4d4d;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    border: none;
+    display: inline-block;
+}
+
+.btn-eliminar:hover {
+    background-color: #cc0000;
+}
+
+/* Modal de confirmación */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
     justify-content: center;
     align-items: center;
-    margin: 40px auto; /* Margen superior e inferior */
-    width: 80%; /* Ajustar ancho del contenedor */
+    z-index: 1000; /* Asegura que esté encima de otros elementos */
 }
 
-/* Tabla más compacta y centrada */
-table#tabla-obras {
-    width: 200%; /* Ancho completo del contenedor */
-    max-width: 1000px; /* Tamaño máximo de la tabla */
-    margin: auto;
-    border-collapse: collapse; /* Elimina espacios entre bordes */
-    text-align: center; /* Centra texto en celdas */
+/* Contenido del modal */
+.modal-content {
+    background-color: #fff; /* Fondo blanco */
+    padding: 2rem;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 10px var(--sombra-suave); /* Sombra suave */
+    animation: fadeIn 0.3s ease-in-out; /* Animación al aparecer */
+    border: 1px solid var(--verde-agua); /* Borde en tono verde agua */
 }
 
-/* Encabezado de la tabla */
-table#tabla-obras thead th {
-    background-color: #f1f1f1; /* Fondo gris claro */
-    border-bottom: 2px solid #ccc; /* Borde inferior */
-    padding: 10px; /* Espaciado */
+/* Animación de entrada del modal */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
-/* Filas de la tabla */
-table#tabla-obras tbody tr:nth-child(even) {
-    background-color: #f9f9f9; /* Fondo alternado */
+/* Título del modal */
+.modal-content h2 {
+    color: var(--azul-logo); /* Azul principal */
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
 }
 
-table#tabla-obras tbody tr:hover {
-    background-color: #e9ecef; /* Color al pasar el mouse */
+/* Texto del modal */
+.modal-content p {
+    color: var(--texto-oscuro);
+    margin-bottom: 1.5rem;
 }
 
-/* Botones de opciones */
-.btn {
-    padding: 5px 12px;
-    font-size: 14px;
-    text-decoration: none;
-    border-radius: 5px;
-    margin: 0 3px; /* Separación entre botones */
+/* Botones dentro del modal */
+.modal-content .form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
 }
 
-.btn-warning {
-    background-color: #ffc107;
-    color: white;
-    border: none;
-}
-
+/* Botón de confirmación */
 .btn-danger {
-    background-color: #dc3545;
-    color: white;
+    background-color: #ff4d4d; /* Rojo peligro */
+    color: #fff;
+    padding: 0.75rem 1.5rem;
     border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.btn:hover {
-    opacity: 0.9; /* Ligeramente opaco al pasar el mouse */
+.btn-danger:hover {
+    background-color: #cc0000; /* Rojo más oscuro */
+    transform: translateY(-2px);
+}
+
+.btn-danger:active {
+    transform: translateY(0);
+}
+
+/* Botón de cancelación */
+.btn-secondary {
+    background-color: var(--verde-agua); /* Verde agua */
+    color: var(--texto-oscuro);
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: var(--verde-claro); /* Verde más claro */
+    transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+}
+
+/* Responsividad */
+@media (max-width: 600px) {
+    .modal-content {
+        width: 95%; /* Ocupa casi todo el ancho en pantallas pequeñas */
+    }
+
+    .modal-content .form-actions {
+        flex-direction: column; /* Botones en columna */
+        gap: 0.5rem;
+    }
 }

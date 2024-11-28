@@ -1,18 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agregar Obra Social</title>
-</head>
-<body>
-    <h1>Agregar Obra Social</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Guardar</button>
-        <a href="{% url 'obra_sociales:listar_obras_sociales' %}" class="btn btn-secondary">Cancelar</a>
+{% extends 'base.html' %}
+{% load static %}
 
+{% block title %}Agregar Obra Social{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/crear_obra.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Agregar Obra Social</h2>
+    <form method="post" class="form-obra-social">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-12">
+                <label for="id_nombre">Nombre:</label>
+                {{ form.nombre }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <label for="id_cobertura">Cobertura:</label>
+                {{ form.cobertura }}
+            </div>
+        </div>
+        <div class="row botones-form">
+            <button type="submit" class="btn-primary">Guardar</button>
+            <a href="{% url 'obra_sociales:listar_obras_sociales' %}" class="btn-secondary">Cancelar</a>
+        </div>
     </form>
-</body>
-</html>
+</div>
+{% endblock %}
